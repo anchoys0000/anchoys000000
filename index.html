@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>НАЗВАНИЕ КАФЕ — уютное место в городе</title>
+<meta name="description" content="ОПИСАНИЕ КАФЕ — вставь сюда 1-2 предложения для поисковиков">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141110;
+  --bg2:#1c1816;
+  --card:#221d1a;
+  --line:#332b26;
+  --text:#f0e8df;
+  --muted:#a89a8c;
+  --accent:#c9975c;
+  --accent2:#8a5a33;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Manrope',sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+h1,h2,h3{font-family:'Playfair Display',serif;line-height:1.2}
+img{max-width:100%;display:block}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+section{padding:90px 0}
+
+/* ===== ШАПКА ===== */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  transition:background .3s, box-shadow .3s;
+}
+header.scrolled{background:rgba(20,17,16,.92);backdrop-filter:blur(12px);box-shadow:0 2px 20px rgba(0,0,0,.4)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;max-width:1200px;margin:0 auto}
+.logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--accent);text-decoration:none;letter-spacing:.5px}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--text);text-decoration:none;font-weight:500;font-size:.95rem;transition:color .25s}
+.nav-links a:hover{color:var(--accent)}
+.nav-phone{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent);color:#1a1512!important;font-weight:700;
+  padding:10px 20px;border-radius:50px;text-decoration:none;
+  transition:transform .25s, box-shadow .25s;
+}
+.nav-phone:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,151,92,.35)}
+.burger{display:none;background:none;border:none;color:var(--text);font-size:1.6rem;cursor:pointer}
+
+/* ===== ГЛАВНЫЙ ЭКРАН ===== */
+.hero{
+  min-height:100vh;display:flex;align-items:center;position:relative;
+  background:
+    linear-gradient(rgba(20,17,16,.72),rgba(20,17,16,.88)),
+    url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1600&q=80') center/cover no-repeat;
+}
+.hero-inner{max-width:720px}
+.badge{
+  display:inline-block;border:1px solid var(--accent);color:var(--accent);
+  padding:6px 16px;border-radius:50px;font-size:.8rem;letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:22px;
+}
+.hero h1{font-size:clamp(2.4rem,6vw,4.2rem);margin-bottom:20px}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero p{color:var(--muted);font-size:1.15rem;margin-bottom:36px;max-width:540px}
+.btn-row{display:flex;gap:16px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;
+  padding:15px 32px;border-radius:50px;font-size:1rem;transition:transform .25s, box-shadow .25s;
+}
+.btn-primary{background:var(--accent);color:#1a1512}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(201,151,92,.4)}
+.btn-ghost{border:1px solid var(--line);color:var(--text)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-3px)}
+.hero-scroll{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  color:var(--muted);font-size:1.6rem;animation:bob 2s infinite;
+}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,10px)}}
+
+/* ===== ЗАГОЛОВКИ СЕКЦИЙ ===== */
+.sec-head{text-align:center;margin-bottom:56px}
+.sec-head .sub{color:var(--accent);letter-spacing:3px;text-transform:uppercase;font-size:.8rem;font-weight:600}
+.sec-head h2{font-size:clamp(1.9rem,4vw,2.8rem);margin-top:10px}
+.sec-head p{color:var(--muted);max-width:560px;margin:14px auto 0}
+
+/* ===== МЕНЮ ===== */
+#menu{background:var(--bg2)}
+.menu-tabs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.tab{
+  background:none;border:1px solid var(--line);color:var(--muted);
+  padding:10px 24px;border-radius:50px;cursor:pointer;font-family:inherit;
+  font-weight:600;font-size:.92rem;transition:all .25s;
+}
+.tab.active,.tab:hover{background:var(--accent);border-color:var(--accent);color:#1a1512}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.menu-item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;transition:transform .25s,border-color .25s;
+}
+.menu-item:hover{transform:translateY(-4px);border-color:var(--accent)}
+.menu-item .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.menu-item h3{font-size:1.15rem}
+.dots{flex:1;border-bottom:1px dashed var(--line);min-width:20px;transform:translateY(-4px)}
+.price{color:var(--accent);font-weight:700;font-size:1.1rem;white-space:nowrap}
+.menu-item p{color:var(--muted);font-size:.9rem;margin-top:6px}
+.menu-panel{display:none}
+.menu-panel.show{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+
+/* ===== О НАС ===== */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-photo{
+  position:relative;border-radius:var(--radius);overflow:hidden;min-height:420px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);cursor:pointer;
+}
+.about-photo::before{
+  content:"";position:absolute;inset:-40px -20px;
+  background:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),
+    url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=900&q=80') center/cover;
+  transform:translateY(var(--py,0px)) scale(var(--ps,1));
+  transition:transform .55s ease;
+  will-change:transform;
+}
+.about-photo:hover::before{--ps:1.06}
+.photo-hint{
+  position:absolute;left:50%;bottom:20px;z-index:2;
+  transform:translateX(-50%) translateY(0);
+  background:rgba(20,17,16,.85);border:1px solid var(--accent);color:var(--accent);
+  padding:9px 20px;border-radius:50px;font-size:.85rem;font-weight:600;letter-spacing:1px;
+  opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;
+  backdrop-filter:blur(8px);white-space:nowrap;
+}
+.about-photo:hover .photo-hint{opacity:1;transform:translateX(-50%) translateY(-4px)}
+.about h2{font-size:clamp(1.9rem,4vw,2.6rem);margin-bottom:20px}
+.about p{color:var(--muted);margin-bottom:16px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.stat{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;transition:transform .3s,border-color .3s;
+}
+.stat:hover{transform:translateY(-4px);border-color:var(--accent)}
+.stat b{display:block;font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--accent)}
+.stat span{color:var(--muted);font-size:.85rem}
+
+/* ===== КНОПКА «ПОДРОБНЕЕ» ===== */
+.btn-more{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--accent);color:#1a1512;font-weight:700;font-size:.98rem;
+  padding:14px 30px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;
+  margin-top:26px;transition:transform .25s,box-shadow .25s,background .25s;
+  position:relative;overflow:hidden;
+}
+.btn-more::after{
+  content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);
+  transform:skewX(-20deg);transition:left .55s ease;
+}
+.btn-more:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(201,151,92,.4)}
+.btn-more:hover::after{left:130%}
+.btn-more:active{transform:translateY(-1px)}
+
+/* ===== ГАЛЕРЕЯ ===== */
+#gallery{background:var(--bg2)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.g-item{
+  border-radius:var(--radius);overflow:hidden;aspect-ratio:1;position:relative;
+  background:linear-gradient(145deg,#2a2420,#1c1816);
+  display:flex;align-items:center;justify-content:center;
+  border:1px dashed var(--line);
+}
+.g-item span{color:var(--muted);font-size:.85rem;text-align:center;padding:10px}
+.g-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* ===== ОТЗЫВЫ ===== */
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.review{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:28px;position:relative;
+}
+.review .stars{color:var(--accent);letter-spacing:3px;margin-bottom:14px;font-size:1.05rem}
+.review p{color:var(--text);font-size:.98rem;margin-bottom:18px}
+.review .who{display:flex;align-items:center;gap:12px}
+.avatar{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:#1a1512;font-size:1.1rem;
+}
+.review .who b{display:block;font-size:.95rem}
+.review .who span{color:var(--muted);font-size:.82rem}
+
+/* ===== КОНТАКТЫ ===== */
+#contacts{background:var(--bg2)}
+.contacts-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:40px}
+.contact-card{display:flex;flex-direction:column;gap:22px}
+.c-line{display:flex;gap:16px;align-items:flex-start}
+.c-icon{
+  width:46px;height:46px;border-radius:14px;flex-shrink:0;
+  background:var(--card);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.c-line b{display:block;margin-bottom:2px}
+.c-line p,.c-line a{color:var(--muted);text-decoration:none;font-size:.95rem}
+.c-line a:hover{color:var(--accent)}
+.socials{display:flex;gap:12px;margin-top:6px}
+.socials a{
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);text-decoration:none;font-size:1.1rem;transition:all .25s;
+}
+.socials a:hover{background:var(--accent);color:#1a1512;transform:translateY(-3px)}
+.map-box{
+  border-radius:var(--radius);overflow:hidden;min-height:380px;
+  border:1px solid var(--line);position:relative;
+  background:var(--card);
+  display:flex;align-items:center;justify-content:center;
+}
+.map-box iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(.4) invert(.92) hue-rotate(180deg) brightness(.9)}
+.map-placeholder{color:var(--muted);text-align:center;padding:20px;font-size:.9rem}
+
+/* ===== ПОДВАЛ ===== */
+footer{padding:40px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:.9rem}
+footer .logo{font-size:1.2rem;display:block;margin-bottom:8px}
+.site-url{color:var(--accent);text-decoration:none}
+
+/* ===== ПЛАВАЮЩАЯ КНОПКА ЗВОНКА (телефон) ===== */
+.call-fab{
+  position:fixed;right:20px;bottom:20px;z-index:200;
+  width:60px;height:60px;border-radius:50%;
+  background:var(--accent);color:#1a1512;text-decoration:none;
+  display:none;align-items:center;justify-content:center;font-size:1.5rem;
+  box-shadow:0 8px 30px rgba(201,151,92,.5);
+  animation:pulse 2.5s infinite;
+}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(201,151,92,.5)}70%{box-shadow:0 0 0 18px rgba(201,151,92,0)}100%{box-shadow:0 0 0 0 rgba(201,151,92,0)}}
+
+/* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:none}
+
+/* ===== МОДАЛЬНОЕ ОКНО «О НАС» ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(10,8,7,0);backdrop-filter:blur(0px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;visibility:hidden;
+  transition:opacity .45s ease,background .45s ease,backdrop-filter .45s ease,visibility 0s linear .45s;
+}
+.modal-overlay.open{
+  opacity:1;visibility:visible;
+  background:rgba(10,8,7,.78);backdrop-filter:blur(10px);
+  transition:opacity .45s ease,background .45s ease,backdrop-filter .45s ease,visibility 0s;
+}
+.modal-window{
+  width:100%;max-width:880px;max-height:88vh;overflow-y:auto;overflow-x:hidden;
+  background:linear-gradient(180deg,#221d1a,#1b1715);
+  border:1px solid var(--line);border-radius:24px;
+  box-shadow:0 30px 100px rgba(0,0,0,.7);
+  transform:scale(.88) translateY(30px);opacity:0;
+  transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .4s ease;
+  scrollbar-width:thin;scrollbar-color:var(--accent) transparent;
+  scroll-behavior:smooth;
+  position:relative;
+}
+.modal-overlay.open .modal-window{transform:scale(1) translateY(0);opacity:1}
+.modal-window::-webkit-scrollbar{width:8px}
+.modal-window::-webkit-scrollbar-track{background:transparent}
+.modal-window::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
+
+.modal-close{
+  position:sticky;top:14px;margin-left:calc(100% - 62px);z-index:10;
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(20,17,16,.85);color:var(--text);font-size:1.35rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+  transition:background .3s,color .3s,transform .3s,border-color .3s;
+}
+.modal-close:hover{background:var(--accent);color:#1a1512;transform:rotate(90deg) scale(1.08);border-color:var(--accent)}
+
+.modal-hero{
+  margin-top:-62px;position:relative;border-radius:24px 24px 0 0;overflow:hidden;
+  aspect-ratio:16/7;min-height:240px;
+}
+.modal-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(20,17,16,.15) 30%,rgba(27,23,21,.98) 100%);
+}
+.modal-body{padding:0 44px 48px;margin-top:-46px;position:relative}
+.modal-body .sub{color:var(--accent);letter-spacing:3px;text-transform:uppercase;font-size:.78rem;font-weight:600}
+.modal-body>h2{font-size:clamp(1.7rem,3.5vw,2.4rem);margin:8px 0 6px}
+.modal-lead{color:var(--muted);font-size:1.06rem;max-width:640px;margin-bottom:8px}
+
+.modal-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;
+  margin:26px 0 8px;
+}
+.m-stat{
+  background:rgba(201,151,92,.07);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;font-size:.92rem;line-height:1.45;
+  transition:transform .3s,border-color .3s,background .3s;
+}
+.m-stat:hover{transform:translateY(-3px);border-color:var(--accent);background:rgba(201,151,92,.13)}
+.m-stat b{color:var(--accent)}
+
+.m-divider{display:flex;align-items:center;gap:14px;margin:36px 0 26px}
+.m-divider::before,.m-divider::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.5;
+}
+.m-divider span{font-size:1.1rem;color:var(--accent)}
+
+.modal-body h3{font-size:1.3rem;margin:34px 0 12px;display:flex;align-items:center;gap:12px}
+.modal-body h3 .ico{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  background:rgba(201,151,92,.12);border:1px solid rgba(201,151,92,.35);
+  display:flex;align-items:center;justify-content:center;font-size:1.05rem;
+}
+.modal-body p{color:var(--muted);margin-bottom:12px}
+.modal-body p b,.modal-body li b{color:var(--text);font-weight:600}
+.modal-body ul{list-style:none;margin:0 0 12px}
+.modal-body ul li{color:var(--muted);padding-left:26px;position:relative;margin-bottom:9px}
+.modal-body ul li::before{
+  content:"·";position:absolute;left:8px;color:var(--accent);font-weight:700;font-size:1.3rem;line-height:1.2;
+}
+
+.modal-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.m-fact{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  font-size:.92rem;color:var(--muted);line-height:1.5;
+  transition:transform .3s,border-color .3s;
+}
+.m-fact:hover{transform:translateY(-3px);border-color:var(--accent)}
+.m-fact .em{font-size:1.15rem;margin-right:6px}
+
+.modal-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.m-gal{
+  border-radius:14px;overflow:hidden;aspect-ratio:4/3;position:relative;
+  border:1px solid var(--line);
+}
+.m-gal img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .6s cubic-bezier(.22,1,.36,1),filter .4s;
+  filter:saturate(.95);
+}
+.m-gal:hover img{transform:scale(1.09);filter:saturate(1.1)}
+.m-gal::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.35));
+  opacity:0;transition:opacity .35s;
+}
+.m-gal:hover::after{opacity:1}
+
+.m-reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.m-reveal.visible{opacity:1;transform:none}
+
+body.modal-lock{overflow:hidden}
+body.nav-lock{overflow:hidden}
+
+/* ===== МОБИЛЬНОЕ МЕНЮ =====
+   Живёт ОТДЕЛЬНЫМ слоем вне <header>, потому что backdrop-filter у шапки
+   делает её containing block для fixed-потомков и ломал бы полноэкранное
+   меню. Пункты подставляются JS-клонированием из десктопного #navLinks. */
+.mobile-menu,.menu-backdrop{display:none}
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+@media(max-width:860px){
+  .about,.contacts-wrap{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .modal-body{padding:0 22px 36px}
+  .modal-hero{aspect-ratio:16/10}
+  .modal-facts{grid-template-columns:1fr}
+  .modal-gallery{grid-template-columns:repeat(2,1fr)}
+
+  .burger{display:block}
+  body.nav-lock header{z-index:410}
+  .burger.is-x{color:var(--accent)}
+
+  /* Десктопный список ссылок на мобильных не используется */
+  .nav-links{display:none}
+  .nav-phone{display:none}
+  .call-fab{display:flex}
+
+  /* Затемнение фона под меню */
+  .menu-backdrop{
+    display:block;position:fixed;inset:0;z-index:390;
+    background:rgba(10,8,7,.65);backdrop-filter:blur(4px);
+    opacity:0;visibility:hidden;
+    transition:opacity .3s ease,visibility 0s linear .3s;
+  }
+  .menu-backdrop.open{opacity:1;visibility:visible;transition:opacity .3s ease,visibility 0s}
+
+  /* Само мобильное меню — поверх всего сайта (выше modal 300 и call-fab 200) */
+  .mobile-menu{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+    position:fixed;inset:0;z-index:400;overflow-y:auto;
+    background:var(--bg);
+    padding:80px 24px 48px;
+    transform:translateX(100%);visibility:hidden;
+    transition:transform .32s cubic-bezier(.22,.9,.3,1),visibility 0s linear .32s;
+  }
+  .mobile-menu.open{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.22,.9,.3,1),visibility 0s}
+  .mobile-menu a:not(.nav-phone){
+    color:var(--text);text-decoration:none;font-weight:600;font-size:1.35rem;
+    transition:color .25s;max-width:100%;
+  }
+  .mobile-menu a:not(.nav-phone):hover{color:var(--accent)}
+  .mobile-menu .nav-phone{display:inline-flex;margin-top:16px}
+
+  section{padding:64px 0}
+}
+@media(max-width:520px){
+  .modal-gallery{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= ШАПКА ================= -->
+<header id="header">
+  <nav class="nav">
+    <a href="#" class="logo">☕ НАЗВАНИЕ</a>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" onclick="toggleNav()">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#menu">Меню</a></li>
+      <li><a href="#about">О нас</a></li>
+      <li><a href="#gallery">Фото</a></li>
+      <li><a href="#reviews">Отзывы</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+    <a class="nav-phone" id="navPhone" href="tel:+70000000000">📞 +7 (___) ___-__-__</a>
+  </nav>
+</header>
+
+<!-- Затемнённый фон и само мобильное меню — отдельные слои вне шапки -->
+<div class="menu-backdrop" id="menuBackdrop" onclick="closeNav()"></div>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация"></nav>
+
+<!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
+<section class="hero">
+  <div class="container hero-inner">
+    <span class="badge">ГОРОД • РАЙОН</span>
+    <h1>НАЗВАНИЕ КАФЕ — <em>слоган или красивая фраза</em></h1>
+    <p>ПАРА ПРЕДЛОЖЕНИЙ О КАФЕ: свежий кофе, домашние десерты, уютная атмосфера. Заменишь этот текст на свой.</p>
+    <div class="btn-row">
+      <a href="#menu" class="btn btn-primary">Смотреть меню</a>
+      <a href="https://t.me/anchoys000000" id="bookingBtn" class="btn btn-ghost">📞 Забронировать столик</a>
+    </div>
+  </div>
+  <div class="hero-scroll">⌄</div>
+</section>
+
+<!-- ================= МЕНЮ ================= -->
+<section id="menu">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sub">Меню</span>
+      <h2>Что мы готовим</h2>
+      <p>Добавь свои категории и блюда — просто копируй блоки ниже.</p>
+    </div>
+
+    <div class="menu-tabs reveal">
+      <button class="tab active" onclick="showTab('coffee',this)">Кофе</button>
+      <button class="tab" onclick="showTab('food',this)">Кухня</button>
+      <button class="tab" onclick="showTab('dessert',this)">Десерты</button>
+    </div>
+
+    <div class="menu-grid menu-panel show" id="coffee">
+      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
+      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
+      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
+      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
+    </div>
+
+    <div class="menu-grid menu-panel" id="food">
+      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
+      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
+      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
+      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
+    </div>
+
+    <div class="menu-grid menu-panel" id="dessert">
+      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
+      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
+      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
+      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= О НАС ================= -->
+<section id="about">
+  <div class="container about">
+    <div class="about-photo reveal" onclick="openAboutModal()" role="button" tabindex="0" aria-label="Подробнее о нас">
+      <div class="photo-hint">✨ Нажмите, чтобы узнать больше</div>
+    </div>
+    <div class="reveal">
+      <span class="sub" style="color:var(--accent);letter-spacing:3px;text-transform:uppercase;font-size:.8rem;font-weight:600">О нас</span>
+      <h2>История и атмосфера кафе</h2>
+      <p>Мы открылись более десяти лет назад с простой идеей: сделать место, куда хочется возвращаться. Сегодня это кафе с собственной пекарней, авторской кухней и командой, которая знает постоянных гостей по именам.</p>
+      <p>Нажмите «Подробнее» — и мы расскажем всю нашу историю: от первой чашки кофе до сегодняшнего дня.</p>
+      <div class="stats-grid">
+        <div class="stat"><b>🏆 10+</b><span>лет работы</span></div>
+        <div class="stat"><b>🍽 120+</b><span>блюд в меню</span></div>
+        <div class="stat"><b>😊 500+</b><span>довольных гостей каждую неделю</span></div>
+        <div class="stat"><b>👨‍🍳 15</b><span>профессиональных поваров</span></div>
+        <div class="stat"><b>⭐️ 4.9/5</b><span>средняя оценка гостей</span></div>
+        <div class="stat"><b>☕️ 30+</b><span>авторских напитков</span></div>
+      </div>
+      <button class="btn-more" onclick="openAboutModal()">Подробнее о нас <span aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ГАЛЕРЕЯ ================= -->
+<section id="gallery">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sub">Фото</span>
+      <h2>Атмосфера и блюда</h2>
+      <p>Замени эти блоки на реальные фото кафе.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="g-item"><span>ФОТО 1<br>(положи картинку рядом с index.html)</span></div>
+      <div class="g-item"><span>ФОТО 2</span></div>
+      <div class="g-item"><span>ФОТО 3</span></div>
+      <div class="g-item"><span>ФОТО 4</span></div>
+      <div class="g-item"><span>ФОТО 5</span></div>
+      <div class="g-item"><span>ФОТО 6</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ОТЗЫВЫ ================= -->
+<section id="reviews">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sub">Отзывы</span>
+      <h2>Что говорят гости</h2>
+      <p>Скопируй реальные отзывы из Яндекс.Карт / 2ГИС заведения.</p>
+    </div>
+    <div class="reviews-grid reveal">
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>«ТЕКСТ ОТЗЫВА — пару предложений от гостя. Самое приятное впечатление, что готовят вкусно и уютно.»</p>
+        <div class="who"><div class="avatar">И</div><div><b>ИМЯ ГОСТЯ</b><span>источник: Яндекс.Карты</span></div></div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>«ТЕКСТ ОТЗЫВА — например про кофе, десерты или персонал.»</p>
+        <div class="who"><div class="avatar">И</div><div><b>ИМЯ ГОСТЯ</b><span>источник: 2ГИС</span></div></div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>«ТЕКСТ ОТЗЫВА — ещё один хороший отзыв с деталями.»</p>
+        <div class="who"><div class="avatar">И</div><div><b>ИМЯ ГОСТЯ</b><span>источник: Яндекс.Карты</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= КОНТАКТЫ ================= -->
+<section id="contacts">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sub">Контакты</span>
+      <h2>Ждём вас в гости</h2>
+    </div>
+    <div class="contacts-wrap">
+      <div class="contact-card reveal">
+        <div class="c-line">
+          <div class="c-icon">📍</div>
+          <div><b>Адрес</b><p>ГОРОД, УЛИЦА, ДОМ</p></div>
+        </div>
+        <div class="c-line">
+          <div class="c-icon">🕐</div>
+          <div><b>Часы работы</b><p>Пн–Вс: __:__ – __:__</p></div>
+        </div>
+        <div class="c-line">
+          <div class="c-icon">📞</div>
+          <div><b>Телефон</b><a href="tel:+70000000000">+7 (___) ___-__-__</a></div>
+        </div>
+        <div class="c-line">
+          <div class="c-icon">✉️</div>
+          <div><b>Почта</b><a href="mailto:ПОЧТА@example.ru">ПОЧТА@example.ru</a></div>
+        </div>
+        <div>
+          <b style="display:block;margin-bottom:10px">Мы в соцсетях</b>
+          <div class="socials">
+            <a href="ССЫЛКА" title="ВКонтакте">VK</a>
+            <a href="ССЫЛКА" title="Telegram">✈</a>
+            <a href="ССЫЛКА" title="Instagram">◉</a>
+          </div>
+        </div>
+      </div>
+      <div class="map-box reveal">
+        <div class="map-placeholder">🗺️<br>ЗДЕСЬ БУДЕТ КАРТА<br>(вставить код из Яндекс.Карт)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= МОДАЛЬНОЕ ОКНО «О НАС» ================= -->
+<div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
+  <div class="modal-window" id="aboutModalWindow">
+    <button class="modal-close" onclick="closeAboutModal()" aria-label="Закрыть">✕</button>
+
+    <div class="modal-hero">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80" alt="Интерьер нашего ресторана">
+    </div>
+
+    <div class="modal-body">
+      <span class="sub">Наша история</span>
+      <h2 id="aboutModalTitle">Кафе, в которое возвращаются</h2>
+      <p class="modal-lead">Больше десяти лет мы каждое утро открываем двери с одной и той же мыслью: сегодня кто-то придёт к нам впервые — и для этого человека всё должно быть идеально.</p>
+
+      <div class="modal-stats">
+        <div class="m-stat">🏆 <b>10+ лет</b> работы</div>
+        <div class="m-stat">🍽 <b>120+ блюд</b> в меню</div>
+        <div class="m-stat">😊 <b>500+ гостей</b> каждую неделю</div>
+        <div class="m-stat">👨‍🍳 <b>15 поваров</b> в команде</div>
+        <div class="m-stat">⭐️ <b>4.9/5</b> средняя оценка</div>
+        <div class="m-stat">☕️ <b>30+ напитков</b> собственных рецептов</div>
+      </div>
+
+      <div class="m-divider"><span>✦</span></div>
+
+      <h3 class="m-reveal"><span class="ico">📖</span>История ресторана</h3>
+      <p class="m-reveal">Всё началось в 2014 году с маленького помещения на шесть столиков, одной кофемашины и огромного желания кормить людей так, как мы кормили бы своих близких. Основатели — два друга, повар и бариста, — вложили в первое кафе все накопленные деньги и, что гораздо важнее, всю свою любовь к ремеслу. Первый год был непростым: мы сами стояли у плиты, сами мыли посуду и сами встречали каждого гостя. Но именно тогда сложился наш главный принцип — никогда не экономить на качестве и всегда относиться к гостю как к другу, который зашёл в гости домой. Со временем кафе выросло: сначала появился второй зал, потом собственная пекарня, затем летняя терраса. Сегодня это полноценный ресторан, но атмосфера того самого первого зала на шесть столиков живёт в каждом уголке.</p>
+
+      <h3 class="m-reveal"><span class="ico">💭</span>Наша философия</h3>
+      <p class="m-reveal">Мы верим, что еда — это способ общения без слов. Хорошо приготовленное блюдо говорит гостю: «Тебе здесь рады, о тебе подумали». Поэтому у нас нет и не будет полуфабрикатов, «вчерашней» выпечки и равнодушия в деталях. Мы искренне убеждены: ресторан — это не про еду. Это про состояние, в котором человек выходит из-за стола. Если гость ушёл чуть счастливее, чем пришёл, — мы сработали правильно. Эта философия проста, но именно она каждое утро поднимает нашу команду из постели задолго до открытия.</p>
+
+      <h3 class="m-reveal"><span class="ico">❤️</span>Почему гости выбирают именно нас</h3>
+      <ul class="m-reveal">
+        <li><b>Честная кухня</b> — всё готовим с нуля: от хлеба до десертов;</li>
+        <li><b>Стабильность</b> — блюдо, которое вы полюбили пять лет назад, сегодня такое же;</li>
+        <li><b>Тёплое обслуживание</b> — официанты помнят вкусы постоянных гостей;</li>
+        <li><b>Демократичные цены</b> — ресторанное качество без пафоса;</li>
+        <li><b>Место для всех</b> — сюда приходят и на деловой завтрак, и на семейный ужин, и на свидание.</li>
+      </ul>
+
+      <h3 class="m-reveal"><span class="ico">🕯</span>Атмосфера заведения</h3>
+      <p class="m-reveal">Наша атмосфера строится из мелочей: мягкий тёплый свет, живые цветы на столах, спокойная музыка, которая не мешает разговору, запах свежей выпечки из открытой кухни. Утром у нас царит неспешный уют — кто-то работает за ноутбуком с чашкой капучино, кто-то читает книгу у окна. Вечером зал наполняется тихими разговорами и смехом. Мы специально не ставим телевизоры и не делаем громкую музыку — пусть главным звуком останется общение людей. Многие гости говорят, что у нас «останавливается время» — и это, наверное, лучший комплимент.</p>
+
+      <div class="modal-gallery m-reveal">
+        <div class="m-gal"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80" alt="Зал кафе"></div>
+        <div class="m-gal"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&q=80" alt="Уютный интерьер"></div>
+        <div class="m-gal"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Поданное блюдо"></div>
+        <div class="m-gal"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="Свежий кофе"></div>
+        <div class="m-gal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80" alt="Фирменный десерт"></div>
+        <div class="m-gal"><img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80" alt="Вечерняя атмосфера"></div>
+      </div>
+
+      <div class="m-divider"><span>✦</span></div>
+
+      <h3 class="m-reveal"><span class="ico">🛋</span>Интерьер и дизайн</h3>
+      <p class="m-reveal">Интерьер мы придумывали сами, годами собирая по кусочкам: натуральное дерево, тёплый кирпич, состаренная медь и мягкий текстиль. На стенах — работы местных художников, которые мы меняем каждые несколько месяцев, превращая зал в маленькую галерею. Мебель частично сделана на заказ в столярной мастерской нашего города — каждый стол имеет свою историю и немного отличается от соседнего. Мы любим повторять: интерьер должен быть как хорошая одежда — не кричать, но чувствоваться в каждой детали. Загляните в дальний угол зала — там стоит кресло, которому уже пятьдесят лет, и оно любимое место наших самых первых гостей.</p>
+
+      <h3 class="m-reveal"><span class="ico">🥕</span>Используемые продукты</h3>
+      <p class="m-reveal">Мы работаем только с теми продуктами, которые не стыдно показать гостю. Мясо — охлаждённое, с проверенных ферм. Рыба приходит три раза в неделю. Молочные продукты — от небольших хозяйств в пределах 150 километров от города. Овощи и зелень закупаем по сезону, поэтому наше меню живёт и меняется вместе с природой. Муку для пекарни выбирали почти год, перепробовав больше двадцати сортов. Кофейные зёрна обжаривают специально для нас по авторскому профилю, разработанному вместе с обжарщиками. Если продукт не прошёл наш внутренний отбор — его просто не будет в вашей тарелке.</p>
+
+      <h3 class="m-reveal"><span class="ico">🤝</span>Работа с местными поставщиками</h3>
+      <p class="m-reveal">Поддерживать своих — один из наших принципов. Более 70% продуктов мы покупаем у местных производителей: сыры — у семейной сыроварни, мёд — у пасеки, ягоды летом — у фермеров с ближайших полей. Это не только вопрос свежести: короткая цепочка поставок означает, что продукт попадает на кухню в тот же день, когда его собрали или произвели. А ещё так мы помогаем развиваться малому бизнесу в нашем регионе — и гордимся этим не меньше, чем своими блюдами. Многие наши поставщики стали друзьями — мы ездим друг к другу в гости и вместе придумываем сезонные новинки.</p>
+
+      <h3 class="m-reveal"><span class="ico">🔥</span>Приготовление блюд</h3>
+      <p class="m-reveal">Наша кухня открыта — вы можете наблюдать, как повара работают над вашим заказом. Горячие блюда готовим на углях и в печи: живой огонь даёт вкус, который невозможно повторить на электрической плите. Бульоны варим на медленном огне по 8–12 часов. Соусы делаем ежедневно, никаких заготовок «на неделю». Пасту раскатываем вручную каждое утро. Да, это дольше и трудозатратнее, чем работать с полуфабрикатами. Но разница во вкусе того стоит — об этом нам говорят наши гости почти каждый день.</p>
+
+      <h3 class="m-reveal"><span class="ico">✍️</span>Авторские рецепты</h3>
+      <p class="m-reveal">В меню больше ста двадцати позиций, и примерно треть из них разработана нашим шеф-поваром и его командой с нуля. Некоторые рецепты созревали годами: фирменный десерт мы доводили до ума восемь месяцев, прежде чем впервые поставили его на поднос гостя. Авторские блюда отмечены в меню специальным значком — попробуйте их, и вы поймёте, чем мы гордимся больше всего. Кстати, несколько рецептов родились из просьб постоянных гостей — если вам чего-то не хватает в меню, просто скажите нам. Через сезон оно может появиться на вашем столе.</p>
+
+      <h3 class="m-reveal"><span class="ico">🍰</span>Напитки и десерты</h3>
+      <p class="m-reveal">Наша кофейная карта — это больше тридцати авторских напитков: от классического эспрессо до сезонных новинок вроде рафа с облепихой или лавандового латте. Для тех, кто не пьёт кофе, — домашние лимонады, травяные сборы и согревающие глинтвейны зимой. А десерты — наша отдельная гордость: вся выпечка готовится в собственной кондитерской с раннего утра, поэтому к открытию витрина уже полна свежих круассанов, тартов и чизкейков. Попробуйте фирменный медовик — его рецепт мы бережём как семейную реликвию уже все десять лет.</p>
+
+      <h3 class="m-reveal"><span class="ico">👨‍🍳</span>Наши повара</h3>
+      <p class="m-reveal">В команде кухни — пятнадцать профессионалов, за плечами которых в сумме больше ста лет опыта. Шеф-повар проходил стажировки в Италии и Франции, су-шеф — чемпион регионального конкурса молодых поваров, а наш кондитер учился в самой известной кондитерской школе страны. Но главное не регалии, а отношение к делу: наши повара приходят за два часа до смены, чтобы лично проверить каждый продукт. Мы регулярно проводим внутренние мастер-классы — молодые учатся у опытных, а опытные подхватывают свежие идеи молодых. Так ремесло передаётся из рук в руки — как и положено в настоящей кухне.</p>
+
+      <h3 class="m-reveal"><span class="ico">🙌</span>Обслуживание гостей</h3>
+      <p class="m-reveal">Хороший сервис незаметен: заказ принят быстро, блюдо подано горячим, чашка кофе наполнена вовремя. Наши официанты проходят обучение сервису и гастрономии — они действительно знают меню и могут честно посоветовать, что попробовать сегодня. Если гость торопится, мы предложим быстрые позиции; если празднует — поможем с сюрпризом. Для маленьких гостей у нас детские стульчики, раскраски и отдельное меню. Аллергики и вегетарианцы тоже у нас в безопасности: повара всегда готовы адаптировать блюдо под ваши потребности — просто предупредите.</p>
+
+      <h3 class="m-reveal"><span class="ico">🌟</span>Наши ценности</h3>
+      <ul class="m-reveal">
+        <li><b>Качество без компромиссов</b> — лучше убрать блюдо из меню, чем подать его ниже нашей планки;</li>
+        <li><b>Честность</b> — открытая кухня, настоящие продукты, честные цены;</li>
+        <li><b>Люди прежде всего</b> — и гости, и сотрудники;</li>
+        <li><b>Развитие</b> — каждый сезон мы пробуем что-то новое;</li>
+        <li><b>Локальность</b> — поддерживаем фермеров, художников и мастеров нашего города.</li>
+      </ul>
+
+      <h3 class="m-reveal"><span class="ico">💡</span>Интересные факты о ресторане</h3>
+      <div class="modal-facts">
+        <div class="m-fact m-reveal"><span class="em">🥐</span>За десять лет мы испекли больше 400 000 круассанов — их хватило бы, чтобы выстроить дорожку через весь город.</div>
+        <div class="m-fact m-reveal"><span class="em">💍</span>У нас было 37 предложений руки и сердца — и все со счастливым ответом.</div>
+        <div class="m-fact m-reveal"><span class="em">☕️</span>Каждое утро первая чашка кофе бесплатна для того, кто зашёл первым. Традиции уже восемь лет.</div>
+        <div class="m-fact m-reveal"><span class="em">🐈</span>Возле летней террасы «работает» кот Барон — неофициальный маскот кафе и любимец гостей.</div>
+      </div>
+
+      <h3 class="m-reveal"><span class="ico">🏅</span>Наши достижения</h3>
+      <p class="m-reveal">За годы работы мы дважды входили в десятку лучших заведений региона по версии ресторанного рейтинга, получили знак «Отличное качество» от региональной гильдии поваров, а наш шеф стал финалистом национального конкурса. Но главная награда — это средняя оценка 4.9 из 5 от наших гостей и люди, которые приводят к нам своих друзей, детей и родителей. Спасибо, что выбираете нас. Заходите — мы уже ставим чайник.</p>
+
+      <div class="m-divider"><span>✦</span></div>
+
+      <p style="text-align:center;color:var(--muted)">Забронируйте столик — мы ждём именно вас ☕️</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+        <a href="tel:+70000000000" class="btn btn-primary">📞 Позвонить</a>
+        <a href="#contacts" class="btn btn-ghost" onclick="closeAboutModal()">Как нас найти</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ПОДВАЛ ================= -->
+<footer>
+  <div class="container">
+    <a href="#" class="logo">☕ НАЗВАНИЕ</a>
+    <p>© 2026 НАЗВАНИЕ КАФЕ • <a class="site-url" href="https://АДРЕС-САЙТА.ru">АДРЕС-САЙТА.ru</a></p>
+    <p style="margin-top:12px;font-size:.82rem;opacity:.75">Сайт сделал <a href="https://t.me/anchoys000000" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:600">Кирилл</a> ✈</p>
+  </div>
+</footer>
+
+<!-- Плавающая кнопка звонка на телефонах -->
+<a class="call-fab" href="tel:+70000000000" title="Позвонить">📞</a>
+
+<script>
+// ===== КНОПКА «ЗАБРОНИРОВАТЬ СТОЛИК» =====
+const BOOKING_TEL='tel:+70000000000';           // ← номер телефона кафе
+const BOOKING_TG ='https://t.me/anchoys000000'; // ← ссылка на Telegram
+(function(){
+  const btn=document.getElementById('bookingBtn');
+  if(!btn)return;
+  const isMobile=/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
+  if(isMobile){
+    btn.href=BOOKING_TEL;
+  }else{
+    btn.href=BOOKING_TG;
+    btn.target='_blank';
+    btn.rel='noopener';
+  }
+})();
+
+// Тень у шапки при скролле
+addEventListener('scroll',()=>document.getElementById('header').classList.toggle('scrolled',scrollY>40));
+
+// ===== МОБИЛЬНОЕ МЕНЮ =====
+const burger=document.getElementById('burger');
+const mobileMenu=document.getElementById('mobileMenu');
+const menuBackdrop=document.getElementById('menuBackdrop');
+
+function openNav(){
+  mobileMenu.classList.add('open');
+  menuBackdrop.classList.add('open');
+  document.body.classList.add('nav-lock');
+  burger.classList.add('is-x');
+  burger.textContent='✕';
+  burger.setAttribute('aria-expanded','true');
+}
+function closeNav(){
+  mobileMenu.classList.remove('open');
+  menuBackdrop.classList.remove('open');
+  document.body.classList.remove('nav-lock');
+  burger.classList.remove('is-x');
+  burger.textContent='☰';
+  burger.setAttribute('aria-expanded','false');
+}
+function toggleNav(){mobileMenu.classList.contains('open')?closeNav():openNav()}
+
+// Пункты меню берём из десктопного списка + кнопка телефона
+document.querySelectorAll('#navLinks a').forEach(a=>{
+  const link=a.cloneNode(true);
+  link.addEventListener('click',closeNav);
+  mobileMenu.appendChild(link);
+});
+(function(){
+  const phone=document.getElementById('navPhone');
+  if(phone)mobileMenu.appendChild(phone.cloneNode(true));
+})();
+
+// Закрытие по Esc (работает и на ПК в узком окне)
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&mobileMenu.classList.contains('open'))closeNav();
+});
+// Если окно растянули на весь экран с открытым меню — закрываем его
+addEventListener('resize',()=>{
+  if(innerWidth>860&&mobileMenu.classList.contains('open'))closeNav();
+});
+
+// Переключение категорий меню
+function showTab(id,btn){
+  document.querySelectorAll('.menu-panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Появление блоков при прокрутке
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
+}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// ===== МОДАЛЬНОЕ ОКНО «О НАС» =====
+const aboutModal=document.getElementById('aboutModal');
+const aboutModalWindow=document.getElementById('aboutModalWindow');
+let mObserver=null;
+
+function openAboutModal(){
+  aboutModal.classList.add('open');
+  document.body.classList.add('modal-lock');
+  aboutModalWindow.scrollTop=0;
+  if(!mObserver){
+    mObserver=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('visible');mObserver.unobserve(e.target)}
+    }),{root:aboutModalWindow,threshold:.08});
+  }
+  aboutModalWindow.querySelectorAll('.m-reveal:not(.visible)').forEach(el=>mObserver.observe(el));
+}
+function closeAboutModal(){
+  aboutModal.classList.remove('open');
+  document.body.classList.remove('modal-lock');
+}
+// Закрытие по клику вне окна
+aboutModal.addEventListener('click',e=>{if(e.target===aboutModal)closeAboutModal()});
+// Закрытие по Esc
+addEventListener('keydown',e=>{if(e.key==='Escape'&&aboutModal.classList.contains('open'))closeAboutModal()});
+
+// ===== ПАРАЛЛАКС ФОТО В СЕКЦИИ «О НАС» =====
+const aboutPhoto=document.querySelector('.about-photo');
+let ticking=false;
+addEventListener('scroll',()=>{
+  if(ticking||!aboutPhoto)return;
+  ticking=true;
+  requestAnimationFrame(()=>{
+    const r=aboutPhoto.getBoundingClientRect();
+    if(r.bottom>0&&r.top<innerHeight){
+      const off=(r.top+r.height/2-innerHeight/2)*-.08;
+      aboutPhoto.style.setProperty('--py',off.toFixed(1)+'px');
+    }
+    ticking=false;
+  });
+},{passive:true});
+</script>
+</body>
+</html>
