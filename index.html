@@ -1,8 +1,27 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== БЕЗОПАСНОСТЬ ===== -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: https://images.unsplash.com;
+  frame-src https://yandex.ru https://*.yandex.ru https://api-maps.yandex.ru;
+  connect-src 'self' https://cafe-orders.kirillburkalo71.workers.dev;
+  object-src 'none';
+  base-uri 'none';
+  form-action 'none';
+  frame-ancestors 'none';
+  upgrade-insecure-requests
+">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="X-Content-Type-Options" content="nosniff">
+
 <title>НАЗВАНИЕ КАФЕ — уютное место в городе</title>
 <meta name="description" content="ОПИСАНИЕ КАФЕ — вставь сюда 1-2 предложения для поисковиков">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,6 +63,7 @@ header.scrolled{background:rgba(20,17,16,.92);backdrop-filter:blur(12px);box-sha
 .nav-links{display:flex;gap:32px;list-style:none}
 .nav-links a{color:var(--text);text-decoration:none;font-weight:500;font-size:.95rem;transition:color .25s}
 .nav-links a:hover{color:var(--accent)}
+.nav-actions{display:flex;align-items:center;gap:12px}
 .nav-phone{
   display:inline-flex;align-items:center;gap:8px;
   background:var(--accent);color:#1a1512!important;font-weight:700;
@@ -51,6 +71,15 @@ header.scrolled{background:rgba(20,17,16,.92);backdrop-filter:blur(12px);box-sha
   transition:transform .25s, box-shadow .25s;
 }
 .nav-phone:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,151,92,.35)}
+.nav-cart{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--line);color:var(--text);
+  padding:10px 18px;border-radius:50px;font-weight:700;font-size:.95rem;
+  cursor:pointer;font-family:inherit;
+  transition:transform .25s,box-shadow .25s,border-color .25s,color .25s;
+}
+.nav-cart:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.nav-cart .nc-count{background:var(--accent);color:#1a1512;border-radius:50px;padding:1px 9px;font-size:.85rem}
 .burger{display:none;background:none;border:none;color:var(--text);font-size:1.6rem;cursor:pointer}
 
 /* ===== ГЛАВНЫЙ ЭКРАН ===== */
@@ -92,26 +121,6 @@ header.scrolled{background:rgba(20,17,16,.92);backdrop-filter:blur(12px);box-sha
 
 /* ===== МЕНЮ ===== */
 #menu{background:var(--bg2)}
-.menu-tabs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
-.tab{
-  background:none;border:1px solid var(--line);color:var(--muted);
-  padding:10px 24px;border-radius:50px;cursor:pointer;font-family:inherit;
-  font-weight:600;font-size:.92rem;transition:all .25s;
-}
-.tab.active,.tab:hover{background:var(--accent);border-color:var(--accent);color:#1a1512}
-.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
-.menu-item{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:22px 24px;transition:transform .25s,border-color .25s;
-}
-.menu-item:hover{transform:translateY(-4px);border-color:var(--accent)}
-.menu-item .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
-.menu-item h3{font-size:1.15rem}
-.dots{flex:1;border-bottom:1px dashed var(--line);min-width:20px;transform:translateY(-4px)}
-.price{color:var(--accent);font-weight:700;font-size:1.1rem;white-space:nowrap}
-.menu-item p{color:var(--muted);font-size:.9rem;margin-top:6px}
-.menu-panel{display:none}
-.menu-panel.show{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
 
 /* ===== О НАС ===== */
 .about{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
@@ -244,7 +253,7 @@ footer .logo{font-size:1.2rem;display:block;margin-bottom:8px}
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
 .reveal.visible{opacity:1;transform:none}
 
-/* ===== МОДАЛЬНОЕ ОКНО «О НАС» ===== */
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
 .modal-overlay{
   position:fixed;inset:0;z-index:300;
   background:rgba(10,8,7,0);backdrop-filter:blur(0px);
@@ -363,10 +372,7 @@ footer .logo{font-size:1.2rem;display:block;margin-bottom:8px}
 body.modal-lock{overflow:hidden}
 body.nav-lock{overflow:hidden}
 
-/* ===== МОБИЛЬНОЕ МЕНЮ =====
-   Живёт ОТДЕЛЬНЫМ слоем вне <header>, потому что backdrop-filter у шапки
-   делает её containing block для fixed-потомков и ломал бы полноэкранное
-   меню. Пункты подставляются JS-клонированием из десктопного #navLinks. */
+/* ===== МОБИЛЬНОЕ МЕНЮ ===== */
 .mobile-menu,.menu-backdrop{display:none}
 
 /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
@@ -382,12 +388,12 @@ body.nav-lock{overflow:hidden}
   body.nav-lock header{z-index:410}
   .burger.is-x{color:var(--accent)}
 
-  /* Десктопный список ссылок на мобильных не используется */
   .nav-links{display:none}
   .nav-phone{display:none}
+  .nav-cart{display:inline-flex;padding:8px 14px;font-size:.88rem}
+  .nav-cart #navCartTotal{display:none}
   .call-fab{display:flex}
 
-  /* Затемнение фона под меню */
   .menu-backdrop{
     display:block;position:fixed;inset:0;z-index:390;
     background:rgba(10,8,7,.65);backdrop-filter:blur(4px);
@@ -396,7 +402,6 @@ body.nav-lock{overflow:hidden}
   }
   .menu-backdrop.open{opacity:1;visibility:visible;transition:opacity .3s ease,visibility 0s}
 
-  /* Само мобильное меню — поверх всего сайта (выше modal 300 и call-fab 200) */
   .mobile-menu{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
     position:fixed;inset:0;z-index:400;overflow-y:auto;
@@ -418,6 +423,280 @@ body.nav-lock{overflow:hidden}
 @media(max-width:520px){
   .modal-gallery{grid-template-columns:1fr}
 }
+
+/* ============================================================
+   КАТАЛОГ / ДОСТАВКА
+   ============================================================ */
+.hide{display:none!important}
+
+.search-wrap{max-width:560px;margin:0 auto 26px;position:relative}
+.search-wrap input{
+  width:100%;background:var(--card);border:1px solid var(--line);border-radius:50px;
+  color:var(--text);font-family:inherit;font-size:1rem;padding:14px 22px 14px 50px;
+  outline:none;transition:border-color .25s,box-shadow .25s;
+}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,151,92,.15)}
+.search-wrap::before{
+  content:"🔍";position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  font-size:1.05rem;opacity:.7;pointer-events:none;
+}
+.no-results{text-align:center;color:var(--muted);padding:50px 20px;font-size:1.05rem}
+.no-results b{display:block;font-size:1.6rem;margin-bottom:8px;color:var(--text)}
+
+.cat-bar{
+  position:sticky;top:64px;z-index:150;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  padding:12px 0;margin-bottom:40px;
+  background:rgba(20,17,16,.92);backdrop-filter:blur(10px);
+}
+.cat-chip{
+  background:var(--card);border:1px solid var(--line);color:var(--muted);
+  padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;
+  font-weight:600;font-size:.9rem;transition:all .25s;white-space:nowrap;
+}
+.cat-chip.active,.cat-chip:hover{background:var(--accent);border-color:var(--accent);color:#1a1512;transform:translateY(-2px)}
+
+.cat-title{
+  font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2rem);
+  display:flex;align-items:center;gap:12px;margin:0 0 24px;
+}
+
+.dish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-bottom:44px}
+.dish-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+  animation:cardIn .35s ease;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.dish-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.dish-img{position:relative;aspect-ratio:4/3;overflow:hidden;cursor:pointer}
+.dish-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.dish-card:hover .dish-img img{transform:scale(1.08)}
+.dish-badge{
+  position:absolute;top:10px;left:10px;background:rgba(20,17,16,.85);backdrop-filter:blur(6px);
+  border:1px solid var(--accent);color:var(--accent);
+  padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:700;letter-spacing:.5px;
+}
+.dish-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.dish-body h3{font-size:1.12rem;cursor:pointer;transition:color .2s;margin-bottom:6px}
+.dish-body h3:hover{color:var(--accent)}
+.dish-desc{color:var(--muted);font-size:.86rem;flex:1;margin-bottom:10px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dish-meta{display:flex;gap:14px;color:var(--muted);font-size:.8rem;margin-bottom:14px}
+.dish-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px}
+.dish-foot .price{color:var(--accent);font-weight:700;font-size:1.15rem;white-space:nowrap}
+
+.add-btn{
+  background:var(--accent);color:#1a1512;border:none;border-radius:50px;
+  padding:10px 20px;font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;
+  transition:transform .25s,box-shadow .25s;
+}
+.add-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(201,151,92,.4)}
+.add-btn:active{transform:scale(.94)}
+.qty{
+  display:inline-flex;align-items:center;gap:2px;
+  background:var(--bg);border:1px solid var(--accent);border-radius:50px;padding:4px;
+}
+.qty button{
+  width:32px;height:32px;border-radius:50%;border:none;background:transparent;
+  color:var(--accent);font-size:1.15rem;font-weight:700;cursor:pointer;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s,transform .15s;
+}
+.qty button:hover{background:var(--accent);color:#1a1512}
+.qty button:active{transform:scale(.85)}
+.qty b{min-width:28px;text-align:center;font-size:.98rem;transition:transform .15s}
+.qty b.bump{transform:scale(1.4);color:var(--accent)}
+.qty-sm button{width:28px;height:28px;font-size:1rem}
+.qty-sm b{min-width:22px;font-size:.9rem}
+
+.cart-fab{
+  position:fixed;left:20px;bottom:20px;z-index:250;
+  display:none;align-items:center;gap:12px;
+  background:var(--accent);color:#1a1512;border:none;cursor:pointer;font-family:inherit;
+  padding:14px 24px;border-radius:50px;font-weight:700;font-size:1rem;
+  box-shadow:0 10px 34px rgba(201,151,92,.45);
+  transition:transform .25s,box-shadow .25s;
+}
+.cart-fab.show{display:inline-flex;animation:fabIn .4s cubic-bezier(.22,1,.36,1)}
+.cart-fab:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(201,151,92,.55)}
+@keyframes fabIn{from{transform:translateY(80px);opacity:0}to{transform:none;opacity:1}}
+.cart-fab .cf-count{background:#1a1512;color:var(--accent);border-radius:50px;padding:2px 10px;font-size:.9rem}
+
+.fly-img{position:fixed;z-index:500;border-radius:14px;object-fit:cover;pointer-events:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.5)}
+
+.cart-backdrop{
+  display:block;position:fixed;inset:0;z-index:340;
+  background:rgba(10,8,7,.65);backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;
+  transition:opacity .3s ease,visibility 0s linear .3s;
+}
+.cart-backdrop.open{opacity:1;visibility:visible;transition:opacity .3s ease,visibility 0s}
+.cart-drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:350;
+  width:min(430px,100%);background:var(--bg2);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;
+  transform:translateX(105%);visibility:hidden;
+  transition:transform .38s cubic-bezier(.22,.9,.3,1),visibility 0s linear .38s;
+}
+.cart-drawer.open{transform:none;visibility:visible;transition:transform .38s cubic-bezier(.22,.9,.3,1),visibility 0s}
+.cart-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 24px;border-bottom:1px solid var(--line);
+}
+.cart-head h3{font-size:1.35rem}
+.cart-count-txt{color:var(--muted);font-size:.85rem;font-weight:400;margin-left:8px}
+.cart-close{
+  width:40px;height:40px;border-radius:50%;border:1px solid var(--line);
+  background:var(--card);color:var(--text);font-size:1.15rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .25s;
+}
+.cart-close:hover{background:var(--accent);color:#1a1512;transform:rotate(90deg);border-color:var(--accent)}
+.cart-items{flex:1;overflow-y:auto;padding:16px 24px;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+.cart-items::-webkit-scrollbar{width:6px}
+.cart-items::-webkit-scrollbar-thumb{background:var(--accent);border-radius:6px}
+
+.cart-item{
+  display:flex;gap:14px;align-items:center;padding:14px 0;
+  border-bottom:1px solid var(--line);
+  animation:ciIn .3s ease;
+}
+@keyframes ciIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.cart-item>img{width:62px;height:62px;border-radius:12px;object-fit:cover;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-info b{display:block;font-size:.95rem;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-info>span{color:var(--muted);font-size:.82rem;display:block;margin-bottom:8px}
+.ci-sum{font-weight:700;color:var(--accent);font-size:.95rem;white-space:nowrap}
+.ci-del{
+  background:none;border:none;color:var(--muted);font-size:1.05rem;cursor:pointer;
+  padding:6px;border-radius:8px;transition:color .2s,transform .2s;flex-shrink:0;
+}
+.ci-del:hover{color:#e06c5b;transform:scale(1.2)}
+
+.cart-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;padding:30px;color:var(--muted);
+}
+.cart-empty .big{font-size:4rem;margin-bottom:6px;animation:bob2 2.4s ease-in-out infinite}
+@keyframes bob2{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.cart-empty b{color:var(--text);font-size:1.25rem;font-family:'Playfair Display',serif}
+.cart-empty p{font-size:.92rem;max-width:260px}
+.cart-empty .add-btn{margin-top:14px}
+
+.cart-foot{border-top:1px solid var(--line);padding:18px 24px 22px;background:var(--bg)}
+.cf-row{display:flex;justify-content:space-between;color:var(--muted);font-size:.92rem;margin-bottom:8px}
+.cf-row.total{color:var(--text);font-weight:700;font-size:1.1rem;margin:12px 0 16px;
+  padding-top:12px;border-top:1px dashed var(--line)}
+.cf-row.total span:last-child{color:var(--accent)}
+.cf-row .free{color:var(--accent);font-weight:600}
+.cf-hint{font-size:.82rem;color:var(--muted);margin-bottom:12px;text-align:center}
+.cf-hint .free{color:var(--accent)}
+.cart-checkout{
+  width:100%;background:var(--accent);color:#1a1512;border:none;border-radius:50px;
+  padding:16px;font-family:inherit;font-weight:700;font-size:1.02rem;cursor:pointer;
+  transition:transform .25s,box-shadow .25s;
+}
+.cart-checkout:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,151,92,.4)}
+.cart-checkout:active{transform:scale(.97)}
+
+.dish-modal-hero{
+  margin-top:-62px;position:relative;border-radius:24px 24px 0 0;overflow:hidden;
+  aspect-ratio:16/9;
+}
+.dish-modal-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dish-modal-hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(20,17,16,.1) 40%,rgba(27,23,21,.96) 100%);
+}
+.dish-modal-body{padding:0 40px 42px;margin-top:-58px;position:relative}
+.dish-modal-body h2{font-size:clamp(1.5rem,3vw,2rem);margin-bottom:8px}
+.dm-meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.88rem;margin:10px 0 20px}
+.dm-meta span{background:var(--card);border:1px solid var(--line);border-radius:50px;padding:6px 14px}
+.dm-h{color:var(--accent);letter-spacing:2px;text-transform:uppercase;font-size:.75rem;font-weight:600;margin:20px 0 8px}
+.dm-kbju{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:8px}
+.dm-kbju div{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:10px 12px;text-align:center;font-size:.82rem;color:var(--muted);
+  transition:border-color .25s,transform .25s;
+}
+.dm-kbju div:hover{border-color:var(--accent);transform:translateY(-2px)}
+.dm-kbju b{display:block;color:var(--text);font-size:1rem;font-family:'Playfair Display',serif}
+.dm-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-top:26px;padding-top:22px;border-top:1px dashed var(--line);
+}
+.dm-foot .dm-price{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--accent);font-weight:700}
+
+.checkout-window{max-width:960px}
+.checkout-body{padding:0 40px 44px;margin-top:-6px}
+.checkout-body>h2{font-size:clamp(1.5rem,3vw,2rem);margin:60px 0 6px}
+.checkout-body>.sub-lead{color:var(--muted);margin-bottom:24px;font-size:.95rem}
+.co-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:start}
+.co-field{margin-bottom:16px}
+.co-field label{display:block;font-size:.85rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.co-field input,.co-field textarea,.co-field select{
+  width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  color:var(--text);font-family:inherit;font-size:.95rem;padding:12px 16px;outline:none;
+  transition:border-color .25s,box-shadow .25s;
+}
+.co-field input:focus,.co-field textarea:focus,.co-field select:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,151,92,.15)}
+.co-field textarea{resize:vertical;min-height:74px}
+.co-field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer}
+.co-field input.err,.co-field textarea.err{border-color:#e06c5b;animation:shake .35s}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.co-radios{display:flex;gap:10px;flex-wrap:wrap}
+.co-radio{flex:1;min-width:130px;cursor:pointer}
+.co-radio input{position:absolute;opacity:0;pointer-events:none}
+.co-radio span{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:12px;font-size:.9rem;font-weight:600;color:var(--muted);transition:all .25s;
+}
+.co-radio input:checked+span{border-color:var(--accent);color:var(--accent);background:rgba(201,151,92,.08)}
+.co-summary{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;position:sticky;top:20px;
+}
+.co-summary h4{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:14px}
+.co-line{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;margin-bottom:9px;color:var(--muted)}
+.co-line b{color:var(--text);font-weight:600}
+.co-line .co-qty{color:var(--accent);white-space:nowrap}
+.co-total-row{display:flex;justify-content:space-between;font-weight:700;font-size:1.08rem;
+  margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.co-total-row span:last-child{color:var(--accent)}
+.co-submit{
+  width:100%;margin-top:18px;background:var(--accent);color:#1a1512;border:none;border-radius:50px;
+  padding:16px;font-family:inherit;font-weight:700;font-size:1.02rem;cursor:pointer;
+  transition:transform .25s,box-shadow .25s;
+}
+.co-submit:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,151,92,.4)}
+.co-submit:active{transform:scale(.97)}
+
+.order-success{text-align:center;padding:90px 20px 60px}
+.order-success .big{font-size:4.4rem;animation:popIn .5s cubic-bezier(.22,1,.36,1)}
+@keyframes popIn{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.order-success h2{font-size:1.8rem;margin:16px 0 8px}
+.order-success p{color:var(--muted);max-width:420px;margin:0 auto 8px}
+.order-success .order-num{
+  display:inline-block;margin:14px 0;color:var(--accent);font-weight:700;font-size:1.05rem;
+  border:1px dashed var(--accent);border-radius:50px;padding:8px 22px;
+}
+
+@media(max-width:860px){
+  .co-grid{grid-template-columns:1fr}
+  .co-summary{position:static}
+  .dish-modal-body{padding:0 22px 34px}
+  .checkout-body{padding:0 22px 36px}
+  .checkout-body>h2{margin-top:56px}
+  .cat-bar{top:58px;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;margin:0 -24px 24px;padding:8px 24px;scrollbar-width:none}
+  .cat-bar::-webkit-scrollbar{display:none}
+  .cat-chip{padding:7px 14px;font-size:.82rem;flex-shrink:0}
+  .cart-fab{left:16px;bottom:16px;padding:13px 20px;font-size:.95rem}
+}
 </style>
 </head>
 <body>
@@ -434,11 +713,15 @@ body.nav-lock{overflow:hidden}
       <li><a href="#reviews">Отзывы</a></li>
       <li><a href="#contacts">Контакты</a></li>
     </ul>
-    <a class="nav-phone" id="navPhone" href="tel:+70000000000">📞 +7 (___) ___-__-__</a>
+    <div class="nav-actions">
+      <a class="nav-phone" id="navPhone" href="tel:+70000000000">📞 +7 (___) ___-__-__</a>
+      <button class="nav-cart" id="navCart" onclick="navCartClick()" aria-label="Корзина">
+        🛒 <span id="navCartTotal">0 ₽</span> <span class="nc-count" id="navCartCount">0</span>
+      </button>
+    </div>
   </nav>
 </header>
 
-<!-- Затемнённый фон и само мобильное меню — отдельные слои вне шапки -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeNav()"></div>
 <nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация"></nav>
 
@@ -456,41 +739,25 @@ body.nav-lock{overflow:hidden}
   <div class="hero-scroll">⌄</div>
 </section>
 
-<!-- ================= МЕНЮ ================= -->
+<!-- ================= МЕНЮ / КАТАЛОГ ================= -->
 <section id="menu">
   <div class="container">
     <div class="sec-head reveal">
       <span class="sub">Меню</span>
       <h2>Что мы готовим</h2>
-      <p>Добавь свои категории и блюда — просто копируй блоки ниже.</p>
+      <p>Выбирай категорию или найди блюдо через поиск — и добавляй в заказ.</p>
     </div>
 
-    <div class="menu-tabs reveal">
-      <button class="tab active" onclick="showTab('coffee',this)">Кофе</button>
-      <button class="tab" onclick="showTab('food',this)">Кухня</button>
-      <button class="tab" onclick="showTab('dessert',this)">Десерты</button>
+    <!-- Поиск по меню -->
+    <div class="search-wrap reveal">
+      <input type="search" id="menuSearch" placeholder="Найти блюдо или напиток…" autocomplete="off" aria-label="Поиск по меню">
     </div>
 
-    <div class="menu-grid menu-panel show" id="coffee">
-      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
-      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
-      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
-      <div class="menu-item"><div class="row"><h3>НАПИТОК</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, объём мл</p></div>
-    </div>
+    <!-- Категории (генерируются из данных) -->
+    <div class="cat-bar" id="catBar"></div>
 
-    <div class="menu-grid menu-panel" id="food">
-      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
-      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
-      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
-      <div class="menu-item"><div class="row"><h3>БЛЮДО</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание, вес г</p></div>
-    </div>
-
-    <div class="menu-grid menu-panel" id="dessert">
-      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
-      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
-      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
-      <div class="menu-item"><div class="row"><h3>ДЕСЕРТ</h3><span class="dots"></span><span class="price">___ ₽</span></div><p>описание</p></div>
-    </div>
+    <!-- Сюда рендерятся карточки блюд -->
+    <div id="catalog"></div>
   </div>
 </section>
 
@@ -610,16 +877,13 @@ body.nav-lock{overflow:hidden}
 <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
   <div class="modal-window" id="aboutModalWindow">
     <button class="modal-close" onclick="closeAboutModal()" aria-label="Закрыть">✕</button>
-
     <div class="modal-hero">
       <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80" alt="Интерьер нашего ресторана">
     </div>
-
     <div class="modal-body">
       <span class="sub">Наша история</span>
       <h2 id="aboutModalTitle">Кафе, в которое возвращаются</h2>
       <p class="modal-lead">Больше десяти лет мы каждое утро открываем двери с одной и той же мыслью: сегодня кто-то придёт к нам впервые — и для этого человека всё должно быть идеально.</p>
-
       <div class="modal-stats">
         <div class="m-stat">🏆 <b>10+ лет</b> работы</div>
         <div class="m-stat">🍽 <b>120+ блюд</b> в меню</div>
@@ -628,90 +892,89 @@ body.nav-lock{overflow:hidden}
         <div class="m-stat">⭐️ <b>4.9/5</b> средняя оценка</div>
         <div class="m-stat">☕️ <b>30+ напитков</b> собственных рецептов</div>
       </div>
-
       <div class="m-divider"><span>✦</span></div>
-
       <h3 class="m-reveal"><span class="ico">📖</span>История ресторана</h3>
-      <p class="m-reveal">Всё началось в 2014 году с маленького помещения на шесть столиков, одной кофемашины и огромного желания кормить людей так, как мы кормили бы своих близких. Основатели — два друга, повар и бариста, — вложили в первое кафе все накопленные деньги и, что гораздо важнее, всю свою любовь к ремеслу. Первый год был непростым: мы сами стояли у плиты, сами мыли посуду и сами встречали каждого гостя. Но именно тогда сложился наш главный принцип — никогда не экономить на качестве и всегда относиться к гостю как к другу, который зашёл в гости домой. Со временем кафе выросло: сначала появился второй зал, потом собственная пекарня, затем летняя терраса. Сегодня это полноценный ресторан, но атмосфера того самого первого зала на шесть столиков живёт в каждом уголке.</p>
-
+      <p class="m-reveal">Всё началось в 2014 году с маленького помещения на шесть столиков, одной кофемашины и огромного желания кормить людей так, как мы кормили бы своих близких. Основатели — два друга, повар и бариста, — вложили в первое кафе все накопленные деньги и, что гораздо важнее, всю свою любовь к ремеслу. Со временем кафе выросло: сначала появился второй зал, потом собственная пекарня, затем летняя терраса.</p>
       <h3 class="m-reveal"><span class="ico">💭</span>Наша философия</h3>
-      <p class="m-reveal">Мы верим, что еда — это способ общения без слов. Хорошо приготовленное блюдо говорит гостю: «Тебе здесь рады, о тебе подумали». Поэтому у нас нет и не будет полуфабрикатов, «вчерашней» выпечки и равнодушия в деталях. Мы искренне убеждены: ресторан — это не про еду. Это про состояние, в котором человек выходит из-за стола. Если гость ушёл чуть счастливее, чем пришёл, — мы сработали правильно. Эта философия проста, но именно она каждое утро поднимает нашу команду из постели задолго до открытия.</p>
-
+      <p class="m-reveal">Мы верим, что еда — это способ общения без слов. Хорошо приготовленное блюдо говорит гостю: «Тебе здесь рады, о тебе подумали». Поэтому у нас нет и не будет полуфабрикатов и равнодушия в деталях.</p>
       <h3 class="m-reveal"><span class="ico">❤️</span>Почему гости выбирают именно нас</h3>
       <ul class="m-reveal">
         <li><b>Честная кухня</b> — всё готовим с нуля: от хлеба до десертов;</li>
         <li><b>Стабильность</b> — блюдо, которое вы полюбили пять лет назад, сегодня такое же;</li>
         <li><b>Тёплое обслуживание</b> — официанты помнят вкусы постоянных гостей;</li>
         <li><b>Демократичные цены</b> — ресторанное качество без пафоса;</li>
-        <li><b>Место для всех</b> — сюда приходят и на деловой завтрак, и на семейный ужин, и на свидание.</li>
       </ul>
-
-      <h3 class="m-reveal"><span class="ico">🕯</span>Атмосфера заведения</h3>
-      <p class="m-reveal">Наша атмосфера строится из мелочей: мягкий тёплый свет, живые цветы на столах, спокойная музыка, которая не мешает разговору, запах свежей выпечки из открытой кухни. Утром у нас царит неспешный уют — кто-то работает за ноутбуком с чашкой капучино, кто-то читает книгу у окна. Вечером зал наполняется тихими разговорами и смехом. Мы специально не ставим телевизоры и не делаем громкую музыку — пусть главным звуком останется общение людей. Многие гости говорят, что у нас «останавливается время» — и это, наверное, лучший комплимент.</p>
-
-      <div class="modal-gallery m-reveal">
-        <div class="m-gal"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80" alt="Зал кафе"></div>
-        <div class="m-gal"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&q=80" alt="Уютный интерьер"></div>
-        <div class="m-gal"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Поданное блюдо"></div>
-        <div class="m-gal"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="Свежий кофе"></div>
-        <div class="m-gal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80" alt="Фирменный десерт"></div>
-        <div class="m-gal"><img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80" alt="Вечерняя атмосфера"></div>
-      </div>
-
-      <div class="m-divider"><span>✦</span></div>
-
-      <h3 class="m-reveal"><span class="ico">🛋</span>Интерьер и дизайн</h3>
-      <p class="m-reveal">Интерьер мы придумывали сами, годами собирая по кусочкам: натуральное дерево, тёплый кирпич, состаренная медь и мягкий текстиль. На стенах — работы местных художников, которые мы меняем каждые несколько месяцев, превращая зал в маленькую галерею. Мебель частично сделана на заказ в столярной мастерской нашего города — каждый стол имеет свою историю и немного отличается от соседнего. Мы любим повторять: интерьер должен быть как хорошая одежда — не кричать, но чувствоваться в каждой детали. Загляните в дальний угол зала — там стоит кресло, которому уже пятьдесят лет, и оно любимое место наших самых первых гостей.</p>
-
-      <h3 class="m-reveal"><span class="ico">🥕</span>Используемые продукты</h3>
-      <p class="m-reveal">Мы работаем только с теми продуктами, которые не стыдно показать гостю. Мясо — охлаждённое, с проверенных ферм. Рыба приходит три раза в неделю. Молочные продукты — от небольших хозяйств в пределах 150 километров от города. Овощи и зелень закупаем по сезону, поэтому наше меню живёт и меняется вместе с природой. Муку для пекарни выбирали почти год, перепробовав больше двадцати сортов. Кофейные зёрна обжаривают специально для нас по авторскому профилю, разработанному вместе с обжарщиками. Если продукт не прошёл наш внутренний отбор — его просто не будет в вашей тарелке.</p>
-
-      <h3 class="m-reveal"><span class="ico">🤝</span>Работа с местными поставщиками</h3>
-      <p class="m-reveal">Поддерживать своих — один из наших принципов. Более 70% продуктов мы покупаем у местных производителей: сыры — у семейной сыроварни, мёд — у пасеки, ягоды летом — у фермеров с ближайших полей. Это не только вопрос свежести: короткая цепочка поставок означает, что продукт попадает на кухню в тот же день, когда его собрали или произвели. А ещё так мы помогаем развиваться малому бизнесу в нашем регионе — и гордимся этим не меньше, чем своими блюдами. Многие наши поставщики стали друзьями — мы ездим друг к другу в гости и вместе придумываем сезонные новинки.</p>
-
-      <h3 class="m-reveal"><span class="ico">🔥</span>Приготовление блюд</h3>
-      <p class="m-reveal">Наша кухня открыта — вы можете наблюдать, как повара работают над вашим заказом. Горячие блюда готовим на углях и в печи: живой огонь даёт вкус, который невозможно повторить на электрической плите. Бульоны варим на медленном огне по 8–12 часов. Соусы делаем ежедневно, никаких заготовок «на неделю». Пасту раскатываем вручную каждое утро. Да, это дольше и трудозатратнее, чем работать с полуфабрикатами. Но разница во вкусе того стоит — об этом нам говорят наши гости почти каждый день.</p>
-
-      <h3 class="m-reveal"><span class="ico">✍️</span>Авторские рецепты</h3>
-      <p class="m-reveal">В меню больше ста двадцати позиций, и примерно треть из них разработана нашим шеф-поваром и его командой с нуля. Некоторые рецепты созревали годами: фирменный десерт мы доводили до ума восемь месяцев, прежде чем впервые поставили его на поднос гостя. Авторские блюда отмечены в меню специальным значком — попробуйте их, и вы поймёте, чем мы гордимся больше всего. Кстати, несколько рецептов родились из просьб постоянных гостей — если вам чего-то не хватает в меню, просто скажите нам. Через сезон оно может появиться на вашем столе.</p>
-
-      <h3 class="m-reveal"><span class="ico">🍰</span>Напитки и десерты</h3>
-      <p class="m-reveal">Наша кофейная карта — это больше тридцати авторских напитков: от классического эспрессо до сезонных новинок вроде рафа с облепихой или лавандового латте. Для тех, кто не пьёт кофе, — домашние лимонады, травяные сборы и согревающие глинтвейны зимой. А десерты — наша отдельная гордость: вся выпечка готовится в собственной кондитерской с раннего утра, поэтому к открытию витрина уже полна свежих круассанов, тартов и чизкейков. Попробуйте фирменный медовик — его рецепт мы бережём как семейную реликвию уже все десять лет.</p>
-
-      <h3 class="m-reveal"><span class="ico">👨‍🍳</span>Наши повара</h3>
-      <p class="m-reveal">В команде кухни — пятнадцать профессионалов, за плечами которых в сумме больше ста лет опыта. Шеф-повар проходил стажировки в Италии и Франции, су-шеф — чемпион регионального конкурса молодых поваров, а наш кондитер учился в самой известной кондитерской школе страны. Но главное не регалии, а отношение к делу: наши повара приходят за два часа до смены, чтобы лично проверить каждый продукт. Мы регулярно проводим внутренние мастер-классы — молодые учатся у опытных, а опытные подхватывают свежие идеи молодых. Так ремесло передаётся из рук в руки — как и положено в настоящей кухне.</p>
-
-      <h3 class="m-reveal"><span class="ico">🙌</span>Обслуживание гостей</h3>
-      <p class="m-reveal">Хороший сервис незаметен: заказ принят быстро, блюдо подано горячим, чашка кофе наполнена вовремя. Наши официанты проходят обучение сервису и гастрономии — они действительно знают меню и могут честно посоветовать, что попробовать сегодня. Если гость торопится, мы предложим быстрые позиции; если празднует — поможем с сюрпризом. Для маленьких гостей у нас детские стульчики, раскраски и отдельное меню. Аллергики и вегетарианцы тоже у нас в безопасности: повара всегда готовы адаптировать блюдо под ваши потребности — просто предупредите.</p>
-
-      <h3 class="m-reveal"><span class="ico">🌟</span>Наши ценности</h3>
-      <ul class="m-reveal">
-        <li><b>Качество без компромиссов</b> — лучше убрать блюдо из меню, чем подать его ниже нашей планки;</li>
-        <li><b>Честность</b> — открытая кухня, настоящие продукты, честные цены;</li>
-        <li><b>Люди прежде всего</b> — и гости, и сотрудники;</li>
-        <li><b>Развитие</b> — каждый сезон мы пробуем что-то новое;</li>
-        <li><b>Локальность</b> — поддерживаем фермеров, художников и мастеров нашего города.</li>
-      </ul>
-
-      <h3 class="m-reveal"><span class="ico">💡</span>Интересные факты о ресторане</h3>
+      <h3 class="m-reveal"><span class="ico">💡</span>Интересные факты</h3>
       <div class="modal-facts">
-        <div class="m-fact m-reveal"><span class="em">🥐</span>За десять лет мы испекли больше 400 000 круассанов — их хватило бы, чтобы выстроить дорожку через весь город.</div>
+        <div class="m-fact m-reveal"><span class="em">🥐</span>За десять лет мы испекли больше 400 000 круассанов.</div>
         <div class="m-fact m-reveal"><span class="em">💍</span>У нас было 37 предложений руки и сердца — и все со счастливым ответом.</div>
-        <div class="m-fact m-reveal"><span class="em">☕️</span>Каждое утро первая чашка кофе бесплатна для того, кто зашёл первым. Традиции уже восемь лет.</div>
-        <div class="m-fact m-reveal"><span class="em">🐈</span>Возле летней террасы «работает» кот Барон — неофициальный маскот кафе и любимец гостей.</div>
+        <div class="m-fact m-reveal"><span class="em">☕️</span>Каждое утро первая чашка кофе бесплатна для первого гостя.</div>
+        <div class="m-fact m-reveal"><span class="em">🐈</span>Возле летней террасы «работает» кот Барон — маскот кафе.</div>
       </div>
-
-      <h3 class="m-reveal"><span class="ico">🏅</span>Наши достижения</h3>
-      <p class="m-reveal">За годы работы мы дважды входили в десятку лучших заведений региона по версии ресторанного рейтинга, получили знак «Отличное качество» от региональной гильдии поваров, а наш шеф стал финалистом национального конкурса. Но главная награда — это средняя оценка 4.9 из 5 от наших гостей и люди, которые приводят к нам своих друзей, детей и родителей. Спасибо, что выбираете нас. Заходите — мы уже ставим чайник.</p>
-
       <div class="m-divider"><span>✦</span></div>
-
       <p style="text-align:center;color:var(--muted)">Забронируйте столик — мы ждём именно вас ☕️</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px">
         <a href="tel:+70000000000" class="btn btn-primary">📞 Позвонить</a>
         <a href="#contacts" class="btn btn-ghost" onclick="closeAboutModal()">Как нас найти</a>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ================= МОДАЛЬНОЕ ОКНО БЛЮДА ================= -->
+<div class="modal-overlay" id="dishModal" role="dialog" aria-modal="true">
+  <div class="modal-window dish-window" id="dishModalWindow">
+    <button class="modal-close" onclick="closeDishModal()" aria-label="Закрыть">✕</button>
+    <div class="dish-modal-hero"><img id="dmImg" src="" alt=""></div>
+    <div class="dish-modal-body">
+      <h2 id="dmName"></h2>
+      <div class="dm-meta" id="dmMeta"></div>
+      <p id="dmDesc" style="color:var(--muted)"></p>
+      <div class="dm-h">Состав</div>
+      <p id="dmComp" style="color:var(--muted);font-size:.94rem"></p>
+      <div class="dm-h">КБЖУ на порцию</div>
+      <div class="dm-kbju" id="dmKbju"></div>
+      <div class="dm-foot">
+        <div class="dm-price" id="dmPrice"></div>
+        <div id="dmAction"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= КОРЗИНА ================= -->
+<div class="cart-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Корзина">
+  <div class="cart-head">
+    <h3>Корзина<span class="cart-count-txt" id="cartCountTxt"></span></h3>
+    <button class="cart-close" onclick="closeCart()" aria-label="Закрыть корзину">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-empty hide" id="cartEmpty">
+    <div class="big">🧺</div>
+    <b>Корзина пуста</b>
+    <p>Загляните в меню — там много вкусного, что хочется попробовать.</p>
+    <button class="add-btn" onclick="closeCart();document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Перейти к меню</button>
+  </div>
+  <div class="cart-foot" id="cartFoot">
+    <div class="cf-row"><span>Сумма заказа</span><span id="cartSubtotal">0 ₽</span></div>
+    <div class="cf-row"><span>Доставка</span><span id="cartDelivery">0 ₽</span></div>
+    <div class="cf-hint" id="cartFreeHint"></div>
+    <div class="cf-row total"><span>Итого к оплате</span><span id="cartTotal">0 ₽</span></div>
+    <button class="cart-checkout" onclick="openCheckout()">Оформить заказ</button>
+  </div>
+</aside>
+
+<!-- Плавающая кнопка корзины -->
+<button class="cart-fab" id="cartFab" onclick="openCart()">
+  🛒 <span class="cf-count" id="fabCount">0</span> <span id="fabTotal">0 ₽</span>
+</button>
+
+<!-- ================= ОФОРМЛЕНИЕ ЗАКАЗА / УСПЕХ ================= -->
+<div class="modal-overlay" id="checkoutModal" role="dialog" aria-modal="true">
+  <div class="modal-window checkout-window" id="checkoutWindow">
+    <button class="modal-close" onclick="closeCheckout()" aria-label="Закрыть">✕</button>
+    <div class="checkout-body" id="checkoutBody"></div>
   </div>
 </div>
 
@@ -724,24 +987,20 @@ body.nav-lock{overflow:hidden}
   </div>
 </footer>
 
-<!-- Плавающая кнопка звонка на телефонах -->
 <a class="call-fab" href="tel:+70000000000" title="Позвонить">📞</a>
+
+<script src="telegram/config.js"></script>
+<script src="telegram/telegram.js"></script>
 
 <script>
 // ===== КНОПКА «ЗАБРОНИРОВАТЬ СТОЛИК» =====
-const BOOKING_TEL='tel:+70000000000';           // ← номер телефона кафе
-const BOOKING_TG ='https://t.me/anchoys000000'; // ← ссылка на Telegram
+const BOOKING_TEL='tel:+70000000000';
+const BOOKING_TG ='https://t.me/anchoys000000';
 (function(){
   const btn=document.getElementById('bookingBtn');
   if(!btn)return;
   const isMobile=/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
-  if(isMobile){
-    btn.href=BOOKING_TEL;
-  }else{
-    btn.href=BOOKING_TG;
-    btn.target='_blank';
-    btn.rel='noopener';
-  }
+  if(isMobile){btn.href=BOOKING_TEL}else{btn.href=BOOKING_TG;btn.target='_blank';btn.rel='noopener'}
 })();
 
 // Тень у шапки при скролле
@@ -751,52 +1010,23 @@ addEventListener('scroll',()=>document.getElementById('header').classList.toggle
 const burger=document.getElementById('burger');
 const mobileMenu=document.getElementById('mobileMenu');
 const menuBackdrop=document.getElementById('menuBackdrop');
-
 function openNav(){
-  mobileMenu.classList.add('open');
-  menuBackdrop.classList.add('open');
+  mobileMenu.classList.add('open');menuBackdrop.classList.add('open');
   document.body.classList.add('nav-lock');
-  burger.classList.add('is-x');
-  burger.textContent='✕';
-  burger.setAttribute('aria-expanded','true');
+  burger.classList.add('is-x');burger.textContent='✕';burger.setAttribute('aria-expanded','true');
 }
 function closeNav(){
-  mobileMenu.classList.remove('open');
-  menuBackdrop.classList.remove('open');
+  mobileMenu.classList.remove('open');menuBackdrop.classList.remove('open');
   document.body.classList.remove('nav-lock');
-  burger.classList.remove('is-x');
-  burger.textContent='☰';
-  burger.setAttribute('aria-expanded','false');
+  burger.classList.remove('is-x');burger.textContent='☰';burger.setAttribute('aria-expanded','false');
 }
 function toggleNav(){mobileMenu.classList.contains('open')?closeNav():openNav()}
-
-// Пункты меню берём из десктопного списка + кнопка телефона
 document.querySelectorAll('#navLinks a').forEach(a=>{
-  const link=a.cloneNode(true);
-  link.addEventListener('click',closeNav);
-  mobileMenu.appendChild(link);
+  const link=a.cloneNode(true);link.addEventListener('click',closeNav);mobileMenu.appendChild(link);
 });
-(function(){
-  const phone=document.getElementById('navPhone');
-  if(phone)mobileMenu.appendChild(phone.cloneNode(true));
-})();
-
-// Закрытие по Esc (работает и на ПК в узком окне)
-addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&mobileMenu.classList.contains('open'))closeNav();
-});
-// Если окно растянули на весь экран с открытым меню — закрываем его
-addEventListener('resize',()=>{
-  if(innerWidth>860&&mobileMenu.classList.contains('open'))closeNav();
-});
-
-// Переключение категорий меню
-function showTab(id,btn){
-  document.querySelectorAll('.menu-panel').forEach(p=>p.classList.remove('show'));
-  document.getElementById(id).classList.add('show');
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-}
+(function(){const phone=document.getElementById('navPhone');if(phone)mobileMenu.appendChild(phone.cloneNode(true))})();
+addEventListener('keydown',e=>{if(e.key==='Escape'&&mobileMenu.classList.contains('open'))closeNav()});
+addEventListener('resize',()=>{if(innerWidth>860&&mobileMenu.classList.contains('open'))closeNav()});
 
 // Появление блоков при прокрутке
 const io=new IntersectionObserver(es=>es.forEach(e=>{
@@ -808,10 +1038,8 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const aboutModal=document.getElementById('aboutModal');
 const aboutModalWindow=document.getElementById('aboutModalWindow');
 let mObserver=null;
-
 function openAboutModal(){
-  aboutModal.classList.add('open');
-  document.body.classList.add('modal-lock');
+  aboutModal.classList.add('open');document.body.classList.add('modal-lock');
   aboutModalWindow.scrollTop=0;
   if(!mObserver){
     mObserver=new IntersectionObserver(es=>es.forEach(e=>{
@@ -820,13 +1048,8 @@ function openAboutModal(){
   }
   aboutModalWindow.querySelectorAll('.m-reveal:not(.visible)').forEach(el=>mObserver.observe(el));
 }
-function closeAboutModal(){
-  aboutModal.classList.remove('open');
-  document.body.classList.remove('modal-lock');
-}
-// Закрытие по клику вне окна
+function closeAboutModal(){aboutModal.classList.remove('open');document.body.classList.remove('modal-lock')}
 aboutModal.addEventListener('click',e=>{if(e.target===aboutModal)closeAboutModal()});
-// Закрытие по Esc
 addEventListener('keydown',e=>{if(e.key==='Escape'&&aboutModal.classList.contains('open'))closeAboutModal()});
 
 // ===== ПАРАЛЛАКС ФОТО В СЕКЦИИ «О НАС» =====
@@ -844,6 +1067,483 @@ addEventListener('scroll',()=>{
     ticking=false;
   });
 },{passive:true});
+
+/* ============================================================
+   КАТАЛОГ + КОРЗИНА + ОФОРМЛЕНИЕ ЗАКАЗА
+   ============================================================ */
+const fmt=n=>n.toLocaleString('ru-RU')+' ₽';
+const DELIVERY_PRICE=200, FREE_FROM=1000;
+
+// ===== КАТЕГОРИИ =====
+const CATEGORIES=[
+  {id:'all',     icon:'✨', label:'Все'},
+  {id:'popular', icon:'🔥', label:'Популярное'},
+  {id:'sety',    icon:'🍣', label:'Сеты'},
+  {id:'rolly',   icon:'🍱', label:'Роллы'},
+  {id:'pizza',   icon:'🍕', label:'Пицца'},
+  {id:'burgery', icon:'🍔', label:'Бургеры'},
+  {id:'zakuski', icon:'🥗', label:'Закуски'},
+  {id:'deserty', icon:'🍰', label:'Десерты'},
+  {id:'napitki', icon:'☕', label:'Напитки'},
+];
+
+// ===== ТОВАРЫ (единый источник данных) =====
+const IMG=id=>`https://images.unsplash.com/${id}?w=640&q=80`;
+const products=[
+  {id:1, category:'sety', name:'Сет «Филадельфия хит»', price:1290, weight:'1 020 г', popular:true,
+   desc:'32 куска: Филадельфия классическая, с лососем и огурцом, калифорния с креветкой.',
+   comp:'лосось, креветка, сливочный сыр, рис, нори, огурец, икра масаго',
+   kbju:{kcal:1180,p:54,f:48,c:132}, img:IMG('photo-1579871494447-9811cf80d66c')},
+  {id:2, category:'sety', name:'Сет «Дракон»', price:1590, weight:'1 200 г', popular:true,
+   desc:'40 кусков: дракон с угрём, филадельфия люкс, спайси с лососем.',
+   comp:'угорь, лосось, тунец, сливочный сыр, соус унаги, кунжут',
+   kbju:{kcal:1450,p:62,f:58,c:150}, img:IMG('photo-1611143669185-af224c5e3252')},
+  {id:3, category:'sety', name:'Сет «Для двоих»', price:990, weight:'780 г',
+   desc:'24 куска: классика и запечённые роллы — идеально на вечер вдвоём.',
+   comp:'лосось, курица, сыр, рис, нори, соус спайси',
+   kbju:{kcal:980,p:44,f:36,c:110}, img:IMG('photo-1553621042-f6e147245754')},
+  {id:4, category:'rolly', name:'Филадельфия', price:420, weight:'250 г', popular:true,
+   desc:'Классика жанра: нежный лосось, сливочный сыр, рис.',
+   comp:'лосось, сливочный сыр, рис, нори',
+   kbju:{kcal:320,p:14,f:15,c:32}, img:IMG('photo-1579871494447-9811cf80d66c')},
+  {id:5, category:'rolly', name:'Калифорния с креветкой', price:390, weight:'240 г',
+   desc:'Креветка темпура, авокадо, огурец, икра масаго.',
+   comp:'креветка темпура, авокадо, огурец, масаго, рис',
+   kbju:{kcal:290,p:12,f:11,c:34}, img:IMG('photo-1611143669185-af224c5e3252')},
+  {id:6, category:'rolly', name:'Спайси ролл с лососем', price:410, weight:'255 г',
+   desc:'Обжаренный ролл с лососем и соусом спайси.',
+   comp:'лосось, спайси соус, рис, нори, темпура',
+   kbju:{kcal:350,p:13,f:17,c:35}, img:IMG('photo-1553621042-f6e147245754')},
+  {id:7, category:'pizza', name:'Маргарита', price:490, weight:'420 г',
+   desc:'Томаты сан-марцано, моцарелла, базилик, оливковое масло.',
+   comp:'томаты, моцарелла, базилик, тесто на пивных дрожжах',
+   kbju:{kcal:850,p:32,f:28,c:110}, img:IMG('photo-1574071318508-1cdbab80d002')},
+  {id:8, category:'pizza', name:'Пепперони', price:590, weight:'450 г', popular:true,
+   desc:'Пикантная пепперони, двойная моцарелла, орегано.',
+   comp:'пепперони, моцарелла, томаты, орегано',
+   kbju:{kcal:980,p:40,f:38,c:112}, img:IMG('photo-1628840042765-356cda07504e')},
+  {id:9, category:'pizza', name:'Четыре сыра', price:640, weight:'440 г',
+   desc:'Моцарелла, горгонзола, пармезан, чечил, капля мёда.',
+   comp:'моцарелла, горгонзола, пармезан, чечил, мёд',
+   kbju:{kcal:1020,p:42,f:44,c:104}, img:IMG('photo-1513104890138-7c749659a591')},
+  {id:10, category:'burgery', name:'Классический бургер', price:350, weight:'320 г', popular:true,
+   desc:'Мраморная говядина, чеддер, маринованные огурцы, фирменный соус.',
+   comp:'говядина, чеддер, огурец, лук, салат, соус, булочка бриошь',
+   kbju:{kcal:680,p:32,f:34,c:48}, img:IMG('photo-1568901346375-23c9450c58cd')},
+  {id:11, category:'burgery', name:'Чизбургер с беконом', price:420, weight:'380 г',
+   desc:'Двойной чеддер, хрустящий бекон, карамельный лук.',
+   comp:'говядина, бекон, чеддер, карамельный лук, соус бbq',
+   kbju:{kcal:790,p:38,f:42,c:50}, img:IMG('photo-1553979459-d2229ba7433b')},
+  {id:12, category:'burgery', name:'Бургер с курицей', price:330, weight:'300 г',
+   desc:'Сочное куриное филе в панировке, соус цезарь, свежие овощи.',
+   comp:'куриное филе, соус цезарь, томаты, салат романо',
+   kbju:{kcal:560,p:28,f:24,c:46}, img:IMG('photo-1606755962773-d324e0a13086')},
+  {id:13, category:'zakuski', name:'Цезарь с курицей', price:390, weight:'240 г',
+   desc:'Романо, куриное филе гриль, пармезан, сухарики, соус цезарь.',
+   comp:'романо, курица, пармезан, сухарики, соус цезарь',
+   kbju:{kcal:320,p:26,f:18,c:14}, img:IMG('photo-1546793665-c74683f339c1')},
+  {id:14, category:'zakuski', name:'Сырные палочки', price:290, weight:'180 г',
+   desc:'Моцарелла в хрустящей панировке с соусом маринара.',
+   comp:'моцарелла, панировка, соус маринара',
+   kbju:{kcal:460,p:18,f:26,c:34}, img:IMG('photo-1531749668029-2db88e4276c7')},
+  {id:15, category:'zakuski', name:'Картофель фри', price:190, weight:'150 г',
+   desc:'Золотистый фри с морской солью и соусом на выбор.',
+   comp:'картофель, масло, морская соль',
+   kbju:{kcal:420,p:5,f:20,c:54}, img:IMG('photo-1573080496219-bb080dd4f877')},
+  {id:16, category:'deserty', name:'Чизкейк Нью-Йорк', price:280, weight:'130 г', popular:true,
+   desc:'Классический чизкейк на песочной основе, ягодный соус.',
+   comp:'сливочный сыр, сливки, печенье, ягодный соус',
+   kbju:{kcal:380,p:7,f:26,c:30}, img:IMG('photo-1524351199678-941a58a3df50')},
+  {id:17, category:'deserty', name:'Тирамису', price:320, weight:'120 г',
+   desc:'Классика: савоярди, маскарпоне, кофе, какао.',
+   comp:'маскарпоне, савоярди, эспрессо, какао',
+   kbju:{kcal:340,p:6,f:20,c:32}, img:IMG('photo-1571877227200-a0d98ea607e9')},
+  {id:18, category:'deserty', name:'Медовик фирменный', price:260, weight:'140 г',
+   desc:'Рецепт, который мы бережём десять лет. Тонкие коржи, сметанный крем.',
+   comp:'мёд, сметана, сливочное масло, мука',
+   kbju:{kcal:410,p:6,f:22,c:48}, img:IMG('photo-1464349095431-e9a21285b5f3')},
+  {id:19, category:'napitki', name:'Капучино', price:190, weight:'300 мл', popular:true,
+   desc:'Зерно авторской обжарки, бархатная молочная пенка.',
+   comp:'эспрессо, молоко',
+   kbju:{kcal:120,p:6,f:6,c:10}, img:IMG('photo-1509042239860-f550ce710b93')},
+  {id:20, category:'napitki', name:'Латте лаванда', price:240, weight:'350 мл',
+   desc:'Нежный латте с лавандовым сиропом — наш фирменный напиток.',
+   comp:'эспрессо, молоко, лавандовый сироп',
+   kbju:{kcal:180,p:7,f:7,c:22}, img:IMG('photo-1541167760496-1628856ab772')},
+  {id:21, category:'napitki', name:'Лимонад домашний', price:220, weight:'400 мл',
+   desc:'Свежевыжатый лимон, мята, тростниковый сахар, содовая.',
+   comp:'лимон, мята, сахар, содовая',
+   kbju:{kcal:90,p:0,f:0,c:22}, img:IMG('photo-1437418747212-8d9709afab22')},
+];
+const byId=id=>products.find(p=>p.id===id);
+
+// ===== СОСТОЯНИЕ =====
+const cart=new Map();           // id -> количество
+let activeCat='all';
+let query='';
+
+const catalogEl=document.getElementById('catalog');
+const catBar=document.getElementById('catBar');
+const searchEl=document.getElementById('menuSearch');
+
+// ===== ЧИПЫ КАТЕГОРИЙ =====
+CATEGORIES.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='cat-chip'+(c.id===activeCat?' active':'');
+  b.dataset.cat=c.id;
+  b.textContent=c.icon+' '+c.label;
+  b.onclick=()=>setCategory(c.id);
+  catBar.appendChild(b);
+});
+function setCategory(id){
+  activeCat=id;
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.toggle('active',ch.dataset.cat===id));
+  renderCatalog();
+}
+searchEl.addEventListener('input',()=>{query=searchEl.value.trim().toLowerCase();renderCatalog()});
+
+// ===== РЕНДЕР КАТАЛОГА =====
+function filteredList(){
+  return products.filter(p=>{
+    const byCat=activeCat==='all'
+      ? true
+      : activeCat==='popular'
+        ? p.popular
+        : p.category===activeCat;
+    const byQuery=!query||p.name.toLowerCase().includes(query)||(p.desc||'').toLowerCase().includes(query);
+    return byCat&&byQuery;
+  });
+}
+
+function stepperHTML(p,small){
+  const n=cart.get(p.id)||0;
+  if(!n)return '<button class="add-btn" onclick="addToCart('+p.id+',event)">Добавить</button>';
+  return '<div class="qty'+(small?' qty-sm':'')+'"><button onclick="decQty('+p.id+',event)" aria-label="Убавить">−</button><b id="qty-'+p.id+'">'+n+'</b><button onclick="addToCart('+p.id+',event)" aria-label="Прибавить">+</button></div>';
+}
+
+function cardHTML(p){
+  return `<article class="dish-card" data-id="${p.id}">
+    <div class="dish-img" onclick="openDishModal(${p.id})">
+      <img src="${p.img}" alt="${p.name.replace(/"/g,'&quot;')}" loading="lazy">
+      ${p.popular?'<span class="dish-badge">🔥 Хит</span>':''}
+    </div>
+    <div class="dish-body">
+      <h3 onclick="openDishModal(${p.id})">${p.name}</h3>
+      <p class="dish-desc">${p.desc}</p>
+      <div class="dish-meta"><span>⚖️ ${p.weight}</span><span>🔥 ${p.kbju.kcal} ккал</span></div>
+      <div class="dish-foot">
+        <span class="price">${fmt(p.price)}</span>
+        <span class="slot">${stepperHTML(p)}</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderCatalog(){
+  const list=filteredList();
+  if(!list.length){
+    catalogEl.innerHTML=`<div class="no-results"><b>Ничего не найдено</b>Попробуйте изменить запрос или выбрать другую категорию.</div>`;
+    return;
+  }
+  let html='';
+  if(activeCat==='all'&&!query){
+    // Группируем по категориям, сверху — популярное
+    const popularItems=list.filter(p=>p.popular);
+    const groups=[];
+    if(popularItems.length)groups.push(['popular',popularItems]);
+    CATEGORIES.filter(c=>c.id!=='all'&&c.id!=='popular').forEach(c=>{
+      const items=list.filter(p=>p.category===c.id);
+      if(items.length)groups.push([c.id,items]);
+    });
+    html=groups.map(([cid,items])=>{
+      const cat=CATEGORIES.find(c=>c.id===cid);
+      return `<h3 class="cat-title">${cat.icon} ${cat.label}</h3>
+              <div class="dish-grid">${items.map(cardHTML).join('')}</div>`;
+    }).join('');
+  }else{
+    const cat=CATEGORIES.find(c=>c.id===activeCat);
+    const title=query?'Результаты поиска':(cat?cat.icon+' '+cat.label:'');
+    html=(title?`<h3 class="cat-title">${title}</h3>`:'')+`<div class="dish-grid">${list.map(cardHTML).join('')}</div>`;
+  }
+  catalogEl.innerHTML=html;
+}
+
+// Обновить все карточки блюда (дубликат может быть в «Популярном» и в своей категории)
+function refreshCard(id){
+  const p=byId(id);
+  catalogEl.querySelectorAll('.dish-card[data-id="'+id+'"]').forEach(card=>{
+    const foot=card.querySelector('.dish-foot');
+    const oldSlot=card.querySelector('.slot');
+    const newSlot=document.createElement('span');
+    newSlot.className='slot';
+    newSlot.innerHTML=stepperHTML(p);
+    if(oldSlot)foot.replaceChild(newSlot,oldSlot);else foot.appendChild(newSlot);
+    const qtyEl=newSlot.querySelector('b');
+    if(qtyEl){qtyEl.classList.add('bump');setTimeout(()=>qtyEl.classList.remove('bump'),160)}
+  });
+  const dm=document.getElementById('dmAction');
+  if(dm&&dishModal.classList.contains('open')&&currentDishId===id)dm.innerHTML=stepperHTML(p);
+}
+
+// ===== КОРЗИНА =====
+const cartDrawer=document.getElementById('cartDrawer');
+const cartBackdrop=document.getElementById('cartBackdrop');
+const cartItemsEl=document.getElementById('cartItems');
+const cartEmptyEl=document.getElementById('cartEmpty');
+const cartFootEl=document.getElementById('cartFoot');
+const fab=document.getElementById('cartFab');
+
+function addToCart(id,ev){
+  if(ev){ev.stopPropagation();flyToCart(ev)}
+  cart.set(id,(cart.get(id)||0)+1);
+  refreshCard(id);updateCartUI(true);
+}
+function decQty(id,ev){
+  if(ev)ev.stopPropagation();
+  const n=(cart.get(id)||0)-1;
+  if(n<=0)cart.delete(id);else cart.set(id,n);
+  refreshCard(id);updateCartUI();
+}
+function removeFromCart(id){
+  cart.delete(id);refreshCard(id);updateCartUI();
+}
+
+function cartTotals(){
+  let count=0,sum=0;
+  cart.forEach((n,id)=>{const p=byId(id);count+=n;sum+=p.price*n});
+  const delivery=count===0?0:(sum>=FREE_FROM?0:DELIVERY_PRICE);
+  return{count,sum,delivery,total:sum+delivery};
+}
+
+function updateCartUI(pop){
+  const{count,sum,delivery,total}=cartTotals();
+  // fab
+  fab.classList.toggle('show',count>0);
+  document.getElementById('fabCount').textContent=count;
+  document.getElementById('fabTotal').textContent=fmt(sum);
+  // шапка
+  document.getElementById('navCartTotal').textContent=fmt(sum);
+  document.getElementById('navCartCount').textContent=count;
+  // drawer
+  document.getElementById('cartCountTxt').textContent=count?` • ${count} поз.`:'' ;
+  if(count===0){
+    cartItemsEl.innerHTML='';cartItemsEl.classList.add('hide');
+    cartFootEl.classList.add('hide');cartEmptyEl.classList.remove('hide');
+  }else{
+    cartEmptyEl.classList.add('hide');
+    cartItemsEl.classList.remove('hide');cartFootEl.classList.remove('hide');
+    cartItemsEl.innerHTML=[...cart.entries()].map(([id,n])=>{
+      const p=byId(id);
+      return `<div class="cart-item">
+        <img src="${p.img}" alt="">
+        <div class="ci-info">
+          <b>${p.name}</b>
+          <span>${fmt(p.price)} / шт</span>
+          <div class="qty qty-sm">
+            <button onclick="decQty(${p.id},event)" aria-label="Убавить">−</button>
+            <b>${n}</b>
+            <button onclick="addToCart(${p.id},event)" aria-label="Прибавить">+</button>
+          </div>
+        </div>
+        <span class="ci-sum">${fmt(p.price*n)}</span>
+        <button class="ci-del" onclick="removeFromCart(${p.id})" aria-label="Удалить">🗑</button>
+      </div>`;
+    }).join('');
+    document.getElementById('cartSubtotal').textContent=fmt(sum);
+    document.getElementById('cartDelivery').innerHTML=delivery===0?'<span class="free">Бесплатно</span>':fmt(delivery);
+    document.getElementById('cartTotal').textContent=fmt(total);
+    document.getElementById('cartFreeHint').innerHTML=delivery>0
+      ? `До бесплатной доставки не хватает <span class="free">${fmt(FREE_FROM-sum)}</span>`
+      : '✨ У вас бесплатная доставка!';
+  }
+  if(pop){fab.classList.remove('pop');void fab.offsetWidth;fab.classList.add('pop');setTimeout(()=>fab.classList.remove('pop'),360)}
+}
+
+function navCartClick(){
+  if(innerWidth<=860){document.getElementById('menu').scrollIntoView({behavior:'smooth'})}else{openCart()}
+}
+function openCart(){
+  updateCartUI();
+  cartDrawer.classList.add('open');cartBackdrop.classList.add('open');
+  document.body.classList.add('modal-lock');
+}
+function closeCart(){
+  cartDrawer.classList.remove('open');cartBackdrop.classList.remove('open');
+  document.body.classList.remove('modal-lock');
+}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&cartDrawer.classList.contains('open'))closeCart()});
+
+// ===== ЛЕТЯЩИЙ ТОВАР =====
+function flyToCart(ev){
+  const card=ev.target.closest('.dish-card');
+  const img=card?card.querySelector('.dish-img img'):null;
+  const fabVisible=innerWidth<=860&&fab.classList.contains('show');const target=fabVisible?fab:document.getElementById('navCart');
+  if(!img||!target){return}
+  const r1=img.getBoundingClientRect(),r2=target.getBoundingClientRect();
+  const fly=img.cloneNode();
+  fly.className='fly-img';
+  fly.style.cssText+=`left:${r1.left}px;top:${r1.top}px;width:${r1.width}px;height:${r1.height}px;transition:all .7s cubic-bezier(.22,.9,.3,1)`;
+  document.body.appendChild(fly);
+  requestAnimationFrame(()=>{
+    fly.style.left=(r2.left+r2.width/2-16)+'px';
+    fly.style.top=(r2.top+r2.height/2-16)+'px';
+    fly.style.width='32px';fly.style.height='32px';fly.style.opacity='.3';
+  });
+  setTimeout(()=>fly.remove(),750);
+}
+
+// ===== МОДАЛКА БЛЮДА =====
+const dishModal=document.getElementById('dishModal');
+const dishWindow=document.getElementById('dishModalWindow');
+let currentDishId=null;
+function openDishModal(id){
+  const p=byId(id);if(!p)return;
+  currentDishId=id;
+  document.getElementById('dmImg').src=p.img;
+  document.getElementById('dmImg').alt=p.name;
+  document.getElementById('dmName').textContent=p.name;
+  document.getElementById('dmMeta').innerHTML=`<span>⚖️ ${p.weight}</span><span>🔥 ${p.kbju.kcal} ккал</span>${p.popular?'<span>🔥 Хит продаж</span>':''}`;
+  document.getElementById('dmDesc').textContent=p.desc;
+  document.getElementById('dmComp').textContent=p.comp;
+  document.getElementById('dmKbju').innerHTML=
+    `<div><b>${p.kbju.kcal}</b>ккал</div><div><b>${p.kbju.p} г</b>белки</div><div><b>${p.kbju.f} г</b>жиры</div><div><b>${p.kbju.c} г</b>углеводы</div>`;
+  document.getElementById('dmPrice').textContent=fmt(p.price);
+  document.getElementById('dmAction').innerHTML=stepperHTML(p);
+  dishModal.classList.add('open');document.body.classList.add('modal-lock');
+  dishWindow.scrollTop=0;
+}
+function closeDishModal(){
+  dishModal.classList.remove('open');document.body.classList.remove('modal-lock');currentDishId=null;
+}
+dishModal.addEventListener('click',e=>{if(e.target===dishModal)closeDishModal()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&dishModal.classList.contains('open'))closeDishModal()});
+
+// ===== ОФОРМЛЕНИЕ ЗАКАЗА =====
+const checkoutModal=document.getElementById('checkoutModal');
+const checkoutBody=document.getElementById('checkoutBody');
+
+function openCheckout(){
+  closeCart();
+  const{sum,delivery,total}=cartTotals();
+  const lines=[...cart.entries()].map(([id,n])=>{
+    const p=byId(id);
+    return `<div class="co-line"><b>${p.name}</b><span class="co-qty">×${n}</span><span>${fmt(p.price*n)}</span></div>`;
+  }).join('');
+  checkoutBody.innerHTML=`
+    <h2>Оформление заказа</h2>
+    <p class="sub-lead">Заполните контакты — мы перезвоним и подтвердим заказ.</p>
+    <div class="co-grid">
+      <form id="coForm" novalidate>
+        <div class="co-field"><label>Имя *</label><input id="coName" type="text" placeholder="Как к вам обращаться"></div>
+        <div class="co-field"><label>Телефон *</label><input id="coPhone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></div>
+        <div class="co-field"><label>Способ получения</label>
+          <div class="co-radios">
+            <label class="co-radio"><input type="radio" name="coType" value="delivery" checked><span>🚗 Доставка</span></label>
+            <label class="co-radio"><input type="radio" name="coType" value="pickup"><span>🏃 Самовывоз</span></label>
+          </div>
+        </div>
+        <div class="co-field" id="coAddrWrap">
+          <label>Адрес доставки *</label>
+          <input id="coAddress" type="text" placeholder="Улица, дом, квартира, подъезд">
+        </div>
+        <div class="co-field"><label>Когда приготовить</label>
+          <select id="coTime"><option>Как можно скорее</option><option>Через 1 час</option><option>Через 2 часа</option><option>К вечеру (18:00–20:00)</option></select>
+        </div>
+        <div class="co-field"><label>Оплата</label>
+          <div class="co-radios">
+            <label class="co-radio"><input type="radio" name="coPay" value="cash" checked><span>💵 Наличные</span></label>
+            <label class="co-radio"><input type="radio" name="coPay" value="card"><span>💳 Картой</span></label>
+          </div>
+        </div>
+        <div class="co-field"><label>Комментарий</label><textarea id="coComment" placeholder="Код домофона, без лука, позвонить заранее…"></textarea></div>
+      </form>
+      <div class="co-summary">
+        <h4>Ваш заказ</h4>
+        ${lines}
+        <div class="co-line"><span>Доставка</span><span>${delivery===0?'Бесплатно':fmt(delivery)}</span></div>
+        <div class="co-total-row"><span>Итого</span><span>${fmt(total)}</span></div>
+        <button class="co-submit" onclick="submitOrder()">Подтвердить заказ</button>
+      </div>
+    </div>`;
+  // маска телефона
+  const ph=checkoutBody.querySelector('#coPhone');
+  const formatPhone=d=>{
+    let out='+7';
+    if(d.length>1)out+=' ('+d.slice(1,4);
+    if(d.length>=4)out+=') '+d.slice(4,7);
+    if(d.length>=7)out+='-'+d.slice(7,9);
+    if(d.length>=9)out+='-'+d.slice(9,11);
+    return out;
+  };
+  ph.addEventListener('input',()=>{
+    let d=ph.value.replace(/\D/g,'');
+    if(d.startsWith('8'))d='7'+d.slice(1);
+    if(d&&!d.startsWith('7'))d='7'+d;
+    d=d.slice(0,11);
+    ph.value=formatPhone(d);
+  });
+  // Backspace удаляет последнюю ЦИФРУ, а не символы маски
+  ph.addEventListener('keydown',e=>{
+    if(e.key!=='Backspace'&&e.key!=='Delete')return;
+    e.preventDefault();
+    let d=ph.value.replace(/\D/g,'');
+    if(d.length<=1){ph.value='';return}
+    d=d.slice(0,-1);
+    ph.value=formatPhone(d);
+  });
+  // самовывоз прячет адрес
+  checkoutBody.querySelectorAll('input[name="coType"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      checkoutBody.querySelector('#coAddrWrap').style.display=
+        checkoutBody.querySelector('input[name="coType"]:checked').value==='delivery'?'':'none';
+    });
+  });
+  checkoutModal.classList.add('open');document.body.classList.add('modal-lock');
+}
+function closeCheckout(){
+  checkoutModal.classList.remove('open');document.body.classList.remove('modal-lock');
+}
+checkoutModal.addEventListener('click',e=>{if(e.target===checkoutModal)closeCheckout()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&checkoutModal.classList.contains('open'))closeCheckout()});
+
+async function submitOrder(){
+  const name=checkoutBody.querySelector('#coName');
+  const phone=checkoutBody.querySelector('#coPhone');
+  const type=checkoutBody.querySelector('input[name="coType"]:checked').value;
+  const addr=checkoutBody.querySelector('#coAddress');
+  let ok=true;
+  [name,phone,addr].forEach(el=>el.classList.remove('err'));
+  if(name.value.trim().length<2){name.classList.add('err');ok=false}
+  if(phone.value.replace(/\D/g,'').length!==11){phone.classList.add('err');ok=false}
+  if(type==='delivery'&&addr.value.trim().length<5){addr.classList.add('err');ok=false}
+  if(!ok)return;
+  const num='ЗК-'+String(Math.floor(1000+((Date.now()/1000)%9000)));
+const{sum,delivery,total}=cartTotals();
+  await sendOrderToTelegram({
+    num:num, name:name.value.trim(), phone:phone.value, type:type,
+    address:addr.value.trim(),
+    time:checkoutBody.querySelector('#coTime').value,
+    pay:checkoutBody.querySelector('input[name="coPay"]:checked').value,
+    comment:checkoutBody.querySelector('#coComment').value.trim(),
+    items:[...cart.entries()].map(([id,n])=>{const p=byId(id);return p.name+' × '+n+' — '+fmt(p.price*n)}),
+    subtotal:fmt(sum), delivery:delivery===0?'Бесплатно':fmt(delivery), total:fmt(total)
+  });
+    checkoutBody.innerHTML=`
+    <div class="order-success">
+      <div class="big">🎉</div>
+      <h2>Заказ принят!</h2>
+      <div class="order-num">№ ${num}</div>
+      <p>Спасибо, ${name.value.trim()}!<br>Мы перезвоним на ${phone.value} в течение 5 минут, чтобы подтвердить заказ.</p>
+      <button class="add-btn" style="margin-top:18px" onclick="closeCheckout()">Отлично!</button>
+    </div>`;
+  cart.clear();
+  updateCartUI();
+  renderCatalog();
+}
+
+// ===== СТАРТ =====
+renderCatalog();
+updateCartUI();
 </script>
 </body>
 </html>
