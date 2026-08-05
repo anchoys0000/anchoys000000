@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -1519,7 +1519,7 @@ async function submitOrder(){
   if(!ok)return;
   const num='ЗК-'+String(Math.floor(1000+((Date.now()/1000)%9000)));
 const{sum,delivery,total}=cartTotals();
-  await sendOrderToTelegram({
+  sendOrderToTelegram({
     num:num, name:name.value.trim(), phone:phone.value, type:type,
     address:addr.value.trim(),
     time:checkoutBody.querySelector('#coTime').value,
